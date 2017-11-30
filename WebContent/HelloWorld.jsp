@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+ <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
@@ -33,7 +33,7 @@
               <h3 class="masthead-brand">Welcome</h3>
               <nav class="nav nav-masthead">
                 <a class="nav-link active" href="#">Home</a>
-                <a class="nav-link" href="#">View Reviews</a>
+                <a class="nav-link" href="#">View Your Reservation</a>
                 <a class="nav-link" href="#">Make a Reservation</a>
               </nav>
             </div>

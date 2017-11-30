@@ -37,21 +37,21 @@
       <div class="col-lg-4">
         <div class="jumbotron loginPane">
           <h4 style="margin-bottom:2vh;">Register: </h4>
-          <form>
+          <form method = "register" action = "register.jsp">
             <div class="form-group">
-              <input type="email" class="form-control" placeholder="Enter your Email">
+              <input type="email" class="form-control" placeholder="Enter your Email" name = "email">
             </div>
             <div class="form-group">
-              <input type="password" class="form-control" placeholder="Create a Password">
+              <input type="password" class="form-control" placeholder="Create a Password"  name = "password">
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Enter your Name">
+              <input type="text" class="form-control" placeholder="Enter your Name" name = "name">
             </div>
             <div class="form-group">
-              <input type="phone" class="form-control" placeholder="Enter your Phone Number">
+              <input type="phone" class="form-control" placeholder="Enter your Phone Number" name = "phone">
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Enter your Address">
+              <input type="text" class="form-control" placeholder="Enter your Address" name = "address">
             </div>
             <button type="Submit" class="btn btn-primary form-control" style="width:15vw; margin-top: 2vw; margin-left: 5vw;">Register</button>
           </form>
