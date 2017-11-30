@@ -26,8 +26,8 @@
       <h2>Make Your Reservation</h2>
     </div>
     <div class="form-group col-2 ">
-      <label for="exampleSelect1">Hotel</label>
-      <select class="form-control" id="exampleSelect1" placeholder="Hotel..">
+      <label for="Hotel_Selection">Hotel</label>
+      <select class="form-control" id="Hotel_Selection" placeholder="Hotel..">
         <option selected="selected">Select a Hotel</option>
         <option>Temp1</option>
         <option>Temp2</option>
@@ -45,8 +45,8 @@
           <div class="row">
             <div class="col-2">
               <div class="form-group ">
-                <label for="exampleSelect1">Room</label>
-                <select class="form-control" id="exampleSelect1" placeholder="Hotel..">
+                <label for="Room_Select_">Room</label>
+                <select class="form-control" id="Room_Select_">
             <option selected="selected">Pick a Room</option>
             <option>1</option>
             <option>2</option>
@@ -58,20 +58,20 @@
             </div>
             <div class="col-2">
               <div class="form-group">
-                <label>Numer of Guests in Room:</label>
-                <input type=text class="form-control">
+                <label>Number of Guests in Room:</label>
+                <input id="Num_Of_Guest_"type=text class="form-control">
               </div>
             </div>
             <div class="col-2">
               <div class="form-group">
                 <label>From:</label>
-                <input type=date class="form-control">
+                <input id="Check_in_date_" type=date class="form-control">
               </div>
             </div>
             <div class="col-2">
               <div class="form-group">
                 <label>To:</label>
-                <input type=date class="form-control">
+                <input id="Check_out_date_" type=date class="form-control">
               </div>
             </div>
           </div>
@@ -84,8 +84,8 @@
               <div class="form-row">
                 <div class="col">
                   <div class="form-group">
-                    <label for="exampleSelect1">Breakfast</label>
-                    <select class="form-control" id="exampleSelect1" placeholder="Hotel..">
+                    <label for="Breakfast_Type_">Breakfast</label>
+                    <select class="form-control" id="Breakfast_Type_" placeholder="Hotel..">
                       <option selected="selected">Choose a Breakfast</option>
                       <option>American</option>
                       <option>British</option>
@@ -96,7 +96,7 @@
                 </div>
                 <div class="col">
                   <div class="form-group">
-                    <label for="exampleSelect1">Quantity</label>
+                    <label for="BQuantity_">Quantity</label>
                     <input class="form-control" size=2>
                   </div>
                 </div>
@@ -142,13 +142,13 @@
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Card Number</label>
-            <input class='form-control' type='text'>
+            <input class='form-control' type='text' id="card_num">
           </div>
         </div>
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Card Type</label>
-            <select class="form-control" id="exampleSelect1" placeholder="Hotel..">
+            <select class="form-control" id="card_type" placeholder="Hotel..">
             <option selected="selected">Card Type</option>
             <option>Visa</option>
             <option>MasterCard</option>
@@ -160,7 +160,7 @@
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>CVC Num</label>
-            <input class='form-control' type='text' size=3 placeholder="CVC">
+            <input class='form-control' type='text' size=3 placeholder="CVC" id="cvc_num">
           </div>
         </div>
       </div>
@@ -168,19 +168,19 @@
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Name on Card</label>
-            <input class='form-control' type='text'>
+            <input class='form-control' type='text' id="name_on_card">
           </div>
         </div>
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Exp Date</label>
-            <input class='form-control' type='month'>
+            <input class='form-control' type='month' id="exp_date">
           </div>
         </div>
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Billing Address</label>
-            <input class='form-control' type='text' size=3 placeholder="CVC">
+            <input class='form-control' type='text' size=3 placeholder="Address" id="billing_addr">
           </div>
         </div>
       </div>
