@@ -35,12 +35,12 @@
       <div class="col-lg-4">
         <div class="jumbotron loginPane">
           <h4> Log in: </h4>
-          <form>
+          <form method = "log_in" action = "verify-login.jsp">
             <div class="form-group">
-              <input type="email" class="form-control" placeholder="Email">
+              <input type="email" class="form-control" placeholder="Email" name = "email">
             </div>
             <div class="form-group">
-              <input type="password" class="form-control" placeholder="Password">
+              <input type="password" class="form-control" placeholder="Password" name ="password">
             </div>
             <button type="Submit" class="btn btn-primary form-control" style="margin-bottom:2vh;">Log in</button>
             No Account. <a href="account_register.jsp">Register Now</a>
