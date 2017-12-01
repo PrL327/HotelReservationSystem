@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 
 <html>
 
@@ -18,9 +20,115 @@
       visibility: hidden;
     }
   </style>
+  
 </head>
 
 <body>
+
+<%!
+//method for getting the list of hotel names in our database
+public List<String> getHotelNames(){
+	
+	try{
+	String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
+	Class.forName("com.mysql.jdbc.Driver");
+	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+
+	Statement getHotels = con.createStatement();
+	String hotelsString = "SELECT * FROM Hotel h";
+	ResultSet hotels = getHotels.executeQuery(hotelsString);
+
+	List<String> hotelNames = new ArrayList<String>();
+	while(hotels.next()){
+		String temp = hotels.getString("h.name");
+		hotelNames.add(temp);
+	}
+	con.close();
+	return hotelNames;
+	}catch(Exception e){
+		System.out.println("Error getting hotels names");
+		return null;
+	}
+}
+%>
+
+<%!
+//getting the rooms available in our database upon selecting a hotel
+
+public List<Integer> getRooms(int hotel){
+	try{
+		String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+		
+		Statement getRoom = con.createStatement();
+		String roomStatement = "SELECT * FROM OfferRoom r WHERE r.HotelID = " + Integer.toString(hotel);
+		ResultSet rooms = getRoom.executeQuery(roomStatement);
+		
+		List<Integer> hotelsRoom = new ArrayList<Integer>();
+		
+		while(rooms.next()){
+			int room = rooms.getInt("r.Room_no");
+			hotelsRoom.add(room);
+		}
+		
+		
+		con.close();
+		return hotelsRoom;
+	}catch(Exception e){
+		System.out.println("Error getting hotel's room numbers");
+		return null;
+	}
+}
+
+%>
+
+<%!
+
+public int getHotelID(String hotelName){ 
+	
+	try{
+		String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+		
+		Statement getID = con.createStatement();
+		String getIDStatement = "SELECT * FROM Hotel h WHERE h.name = " + hotelName;
+		ResultSet result = getID.executeQuery(getIDStatement);
+		
+		int hotelID = 0;
+		if(result.next()){
+			hotelID = result.getInt("h.HotelID");
+		}
+		
+		con.close();
+		return hotelID;
+	}catch(Exception e){
+		System.out.println("Error getting the hotel's id");
+		return 0;
+	}
+}
+
+%>
+
+<%!
+
+public List<String> getHotelServices(int hotelID){
+	
+	try{
+		String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+		 return null;
+	
+	}catch (Exception e){
+		System.out.println("Error getting hotel services");
+		return null;
+	}
+}
+%>
+
+
   <form class="jumbotron">
     <div>
       <h2>Make Your Reservation</h2>
@@ -29,11 +137,14 @@
       <label for="Hotel_Selection">Hotel</label>
       <select class="form-control" id="Hotel_Selection" placeholder="Hotel..">
         <option selected="selected">Select a Hotel</option>
-        <option>Temp1</option>
-        <option>Temp2</option>
-        <option>Temp3</option>
-        <option>Temp4</option>
-        <option>Temp5</option>
+        <%
+        List<String> hotelNames = getHotelNames();
+        int count = 0;
+    	while(count<hotelNames.size()){
+    		out.print("<option value = \""+hotelNames.get(count)+"\">"+ hotelNames.get(count)+"</option>");
+    		count++;
+    	}
+        %>
       </select>
     </div>
     <h4>Room Reservation Details:<Small> Reserve up to 3 Rooms</small> </h4>
@@ -48,11 +159,20 @@
                 <label for="Room_Select_">Room</label>
                 <select class="form-control" id="Room_Select_">
             <option selected="selected">Pick a Room</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+            <%
+            	String hotelName = request.getParameter("hotelSelected");
+                System.out.println("User selected: " + hotelName);
+            	int hotelID = getHotelID(hotelName);
+                if(hotelID!=0){
+                	List<Integer> rooms = getRooms(hotelID);
+                	int i = 0;
+                	while(i < rooms.size()){
+                		out.print("<option>"+Integer.toString(rooms.get(i))+"</option>");
+                		i++;
+                	}
+                }
+            
+            %>
           </select>
               </div>
             </div>

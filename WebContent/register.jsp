@@ -140,7 +140,7 @@
 		
 		System.out.println("successful");
 		message = "Successful";
-		
+		con.close();
 	}catch(Exception e){
 		out.print("Failed");
 		message = "Failed";

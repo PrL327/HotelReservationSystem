@@ -38,6 +38,7 @@
 	String lastName = result.getString("c.last_name");
 	
 	System.out.println("Email: "+ email + " address: "+ address);
+	con.close();
 	
   %>
     <div class="container">
@@ -87,7 +88,7 @@
               </tr>
             </tbody>
         </table>
-      <Button class="btn btn-success">Reserve</Button>
+      <Form method = "reserve" action = "reserve.jsp"><Button type= "Submit" class="btn btn-success">Reserve</Button></Form>
       </div>
     </div>
   </body>
