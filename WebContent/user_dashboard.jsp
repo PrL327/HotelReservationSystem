@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+
 <html>
   <head>
     <meta charset="utf-8">
@@ -12,6 +15,31 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
   </head>
   <body>
+  <%
+  	String user = (String)session.getAttribute("userID");
+  	int userID = Integer.parseInt(user);
+  	
+  	String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
+	Class.forName("com.mysql.jdbc.Driver");
+	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");
+	
+	String findCustomer ="SELECT * FROM Customer c WHERE c.ID = ?";
+	PreparedStatement findStatement = con.prepareStatement(findCustomer);
+	findStatement.setInt(1, userID);
+	
+	ResultSet result = findStatement.executeQuery();
+	
+	result.next();
+	
+	String firstName = result.getString("c.first_name");
+	String email = result.getString("c.Email");
+	String address = result.getString("c.Address");
+	String phone = result.getString("c.Phone_no");
+	String lastName = result.getString("c.last_name");
+	
+	System.out.println("Email: "+ email + " address: "+ address);
+	
+  %>
     <div class="container">
       <h1>User Dashboard</h1>
       <div class="jumbotron">
@@ -19,19 +47,18 @@
         <div class="row" style="margin-left:3vw;">
           <div class="col">
             <div class="row" style="margin-bottom:1vh;">
-              <Label>Name:&nbsp; </Label>
+              <Label>Name: <% out.print(firstName +" " + lastName); %>&nbsp; </Label>
             </div>
             <div class="row">
-              <Label>Email:&nbsp; </Label>
+              <Label>Email: <% out.print(email); %>&nbsp; </Label>
             </div>
           </div>
           <div class="col">
             <div class="row" style="margin-bottom:1vh;">
-              <Label>Phone:&nbsp;</Label>
-              <Label>Placeholder</Label>
+              <Label>Phone: <% out.print(phone); %>&nbsp;</Label>
             </div>
             <div class="row">
-              <Label>Address:&nbsp; </Label>
+              <Label>Address: <% out.print(address); %>&nbsp; </Label>
             </div>
           </div>
         </div>

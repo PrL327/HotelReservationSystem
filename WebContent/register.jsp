@@ -104,6 +104,7 @@
 	}
 	
 	//Will be doing SQL here 
+	String message = "";
 	try{
 		String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
 		Class.forName("com.mysql.jdbc.Driver");
@@ -127,9 +128,6 @@
 		String newUser = "INSERT INTO Customer values(?, ?, ?, ?, ?, ?, ?)";
 		
 		PreparedStatement ps = con.prepareStatement(newUser);
-		String message = "\nThis was inserted: " + randomID + " , " + firstName + " , "  + email + " , " + address
-				+ " number: " + number + " lastname: "+ lastName + " password: "+ password;
-		out.print(message);
 		
 		ps.setInt( 1 , randomID);
 		ps.setString( 2 , firstName);
@@ -141,12 +139,16 @@
 		ps.executeUpdate();
 		
 		System.out.println("successful");
-		
+		message = "Successful";
 		
 	}catch(Exception e){
 		out.print("Failed");
+		message = "Failed";
 	}finally{
-	
+		
+		session.setAttribute("logInAttempt", message);
+		String redirectPage = "login.jsp";
+		response.sendRedirect(redirectPage);
 	}
 
 

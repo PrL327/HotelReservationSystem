@@ -15,6 +15,7 @@
 //check to see if user put in correct credentials
 //succes ? continue : return
 	boolean wasFound = false;
+	int user = 0;
 	try{
 		
 		//setting up DB connection
@@ -27,14 +28,17 @@
 		String userEmail = request.getParameter("email");
 		System.out.println("email: " + userEmail + " password: "+ userPassword);
 		//make statment
-		String search = "SELECT COUNT(*) count FROM Customer c WHERE c.Email = ? AND c.password = ?";
+		String search = "SELECT c.ID as customerID FROM Customer c WHERE c.Email = ? AND c.password = ?";
 		PreparedStatement ps = con.prepareStatement(search);
 		ps.setString(1, userEmail);
 		ps.setString(2, userPassword);
 		
 		ResultSet result = ps.executeQuery();
 		
-		if(result.next()) wasFound = true;
+		if(result.next()){
+			wasFound = true;
+			user = result.getInt("customerID");
+		}
 		
 		System.out.println("Successful");
 		con.close();
@@ -43,6 +47,10 @@
 	}finally{
 		if(wasFound){
 			out.print("continue to make reservation");
+			
+			session.setAttribute("userID", Integer.toString(user));
+			String redirectPage = "user_dashboard.jsp";
+			response.sendRedirect(redirectPage);
 		}else{
 			//NOTE: Will redirect to the user log in, try making a message
 			//that will alert the user that their email or password was incorrect
