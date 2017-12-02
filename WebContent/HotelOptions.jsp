@@ -6,36 +6,16 @@
 <%@ page import= "com.Hotel.HotelServices" %>
 <%@ page import = "com.Hotel.HotelBreakfast" %>
 
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="js/reserve.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-  <style>
-    .hidden {
-      visibility: hidden;
-    }
-  </style>
-  
-  
-  
-</head>
-<body>
-
 <%
 String hotelSelected = request.getParameter("hotelName");
 System.out.println(hotelSelected);
 
 int hotelID = 0;
 List<HotelServices> hotelsServices = new ArrayList<HotelServices>();
-List<Integer> hotelsRooms = new ArrayList<Integer>();
+List<HotelRoom> hotelsRooms = new ArrayList<HotelRoom>();
 List<HotelBreakfast> hotelsBreakfast = new ArrayList<HotelBreakfast>();
 
 try{
@@ -82,15 +62,24 @@ try{
 	
 	//Statement to get hotelRooms
 	try{
-		String roomStatement = "SELECT * FROM OfferRoom r WHERE r.HotelID = ?";
+		
+		String roomStatement = "SELECT * FROM Room r WHERE r.HotelID = ?";
 		PreparedStatement getRoom = con.prepareStatement(roomStatement);
 		getRoom.setInt(1, hotelID);
-		ResultSet rooms = getRoom.executeQuery(roomStatement);
+		
+		ResultSet rooms = getRoom.executeQuery();
 		
 		while(rooms.next()){
-			int room = rooms.getInt("r.Room_no");
-			System.out.println(room);
-			hotelsRooms.add(room);
+			int room = rooms.getInt("r.room_no");
+			float rPrice = rooms.getFloat("r.Price");
+			int rCapacity = rooms.getInt("r.Capacity");
+			int floor_no = rooms.getInt("r.Floor_no");
+			String description = rooms.getString("r.Description");
+			String roomType = rooms.getString("r.RoomType");
+			HotelRoom tempR = new HotelRoom(hotelID, room, rPrice, rCapacity, floor_no, roomType);
+			tempR.addDescription(description);
+			
+			hotelsRooms.add(tempR);
 		}
 	}catch(Exception e){
 		System.out.println("Error getting rooms");
@@ -119,11 +108,137 @@ try{
 }catch(Exception e){
 	System.out.println("Error getting the hotel's id");	
 }
+
+
+
+String[] sTypeList = null;
+String[] sCostList = null;
+int k = 0;
+if(hotelsServices!=null){
+	int numServices = hotelsServices.size();
+	sTypeList = new String[numServices];
+	sCostList = new String[numServices];
+	while(k<hotelsServices.size()){
+		sTypeList[k] = hotelsServices.get(k).type;
+		sCostList[k] = Float.toString(hotelsServices.get(k).cost);
+		k++;
+	}
+}
+
+String[] room_no = null;
+String[] rPrice = null;
+String[] rCapacity = null;
+String[] floor_no = null;
+String[] rDescription = null;
+String[] rType = null;
+
+if(hotelsRooms!=null){
+	int numRooms = hotelsRooms.size();
+	room_no = new String[numRooms];
+	rPrice = new String[numRooms];
+	rCapacity = new String[numRooms];
+	floor_no = new String[numRooms];
+	rDescription = new String[numRooms];
+	rType = new String[numRooms];
+	
+	k = 0;
+	while(k<hotelsRooms.size()){
+		HotelRoom tmp = hotelsRooms.get(k);
+		room_no[k] = Integer.toString(tmp.roomNum);
+		rPrice[k] = Float.toString(tmp.price);
+		rCapacity[k] = Integer.toString(tmp.capacity);
+		floor_no[k] = Integer.toString(tmp.floorNo);
+		rDescription[k] = tmp.description;
+		rType[k] = tmp.roomType;
+		k++;
+	}
+}
+
+if(hotelsBreakfast!=null){
+	int numOfBreakfast = hotelsBreakfast.size();
+	String[] bDescriptionList = new String[numOfBreakfast];
+	String[] bPriceList = new String[numOfBreakfast];
+	String[] bTypeList = new String[numOfBreakfast];
+	
+	k = 0;
+	while(k < hotelsBreakfast.size()){
+		HotelBreakfast bTemp = hotelsBreakfast.get(k);
+		bDescriptionList[k] = bTemp.description;
+		bPriceList[k] = Float.toString(bTemp.price);
+		bTypeList[k] = bTemp.type;
+		k++;
+	}
+	
+}
+
 %>
+
+<%!
+public static String toScriptArray(String[] arr){
+    StringBuffer sb = new StringBuffer();
+    sb.append("[");
+    for(int i=0; i<arr.length; i++){
+        sb.append("\"").append(arr[i]).append("\"");
+        if(i+1 < arr.length){
+            sb.append(",");
+        }
+    }
+    sb.append("]");
+    return sb.toString();
+}
+%>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="js/reserve.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <style>
+    .hidden {
+      visibility: hidden;
+    }
+  </style>
+  
+  <script>
+  var serviceTypeArray = <%= toScriptArray(sTypeList)%> 
+  var serviceCostArray = <%= toScriptArray(sCostList)%>
+  
+  var roomNoArray = <%= toScriptArray(room_no)%> 
+  var roomPriceArray = <%= toScriptArray(rPrice)%>
+  var roomCapacityArray = <%= toScriptArray(rCapacity)%>
+  var floorNoArray = <%= toScriptArray(floor_no)%> 
+  var roomDescription = <%= toScriptArray(rDescription)%>
+  var roomType = <%= toScriptArray(rType)%> 
+  
+  var currTotal = 0;
+  </script>
+  <script type="text/javascript">
+  
+  
+  
+  function updatePrice(selectObj){
+	  // get the index of the selected option 
+	  var idx = selectObj.selectedIndex;
+	  // get the country select element via its known id 
+	  var cSelect = document.getElementById("test"); 
+	  cSelect.innerHTML = roomPriceArray[idx];
+  }
+  
+  </script>
+  
+</head>
+<body>
+
 
 
 <form class="jumbotron">
     <h4>Room Reservation Details:<Small> Reserve up to 3 Rooms</small> </h4>
+    <label id="test">Test</label>
     <a href="">View Hotel Rooms</a>
     <div id="RoomReservation_" style="margin-bottom:2vh; margin-top:1vh;">
       <div class="Room_">
@@ -133,13 +248,13 @@ try{
             <div class="col-2">
               <div class="form-group ">
                 <label for="Room_Select_">Room</label>
-                <select class="form-control" id="roomSelection">
+                <select class="form-control" id="roomSelection" onchange = "updatePrice(this);">
             <option value = 0 >Pick a Room</option>
            <%
         int count = 0;
         if(hotelsRooms!=null){
 	    	while(count<hotelsRooms.size()){
-	    		out.print("<option value = \""+Integer.toString(hotelsRooms.get(count))+"\">"+ Integer.toString(hotelsRooms.get(count))+"</option>");
+	    		out.print("<option value = \""+Integer.toString(hotelsRooms.get(count).roomNum)+"\">"+ Integer.toString(hotelsRooms.get(count).roomNum)+"</option>");
 	    		count++;
 	    		
 	    	}
