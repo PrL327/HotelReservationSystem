@@ -23,7 +23,7 @@
         /*background: red;*/
       }
       body {
-        background-image: url('../photos/skyline.jpeg');
+        background-image: url('photos/skyline.jpeg');
         background-size: 100% 100%;
       }
     </style>

@@ -1,8 +1,5 @@
- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -15,10 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-    <title>Hotels | CS 336 Project</title>
+    <title>Cover Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-   <!--  <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
     <!-- Custom styles for this template -->
     <link href="css/cover.css" rel="stylesheet">
@@ -33,8 +29,9 @@
               <h3 class="masthead-brand">Welcome</h3>
               <nav class="nav nav-masthead">
                 <a class="nav-link active" href="#">Home</a>
-                <a class="nav-link" href="#">View Your Reservation</a>
-                <a class="nav-link" href="#">Make a Reservation</a>
+                <a class="nav-link" href="#">View Reviews</a>
+                <a class="nav-link" href="#">Stats</a>
+                <a class="nav-link" href="#">Log In</a>
               </nav>
             </div>
           </header>
@@ -45,7 +42,26 @@
             <p class="lead">
               <a href="login.jsp" class="btn btn-lg btn-primary">Reserve Now</a>
             </p>
+            <form method=HotelDetails action="HotelDetails.jsp">
+              <p>
+              <h4> Find a Hotel and all its info:</h4>
+              <select name="Hotel" class="form-control">
+                <option value=88877741> The Nantucket Hotel & Resort </option>
+                <option value=654684664> The Inn at Lost Creek </option>
+                <option value=687564646> Stephanie Inn </option>
+                <option value=784512231> The Charmant Hotel </option>
+                <option value=894561654> The Oxford Hotel </option>
+              </select>
+              <input class="btn btn-lg btn-primary" type="submit" value="Submit" style="margin-top: 2vh">
+            </p>
+          </form>
           </main>
+
+          <!-- <footer class="mastfoot">
+            <div class="inner">
+              <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+            </div>
+          </footer> -->
         </div>
       </div>
     </div>
@@ -58,4 +74,3 @@
     <script src="../../../../dist/js/bootstrap.min.js"></script>
   </body>
 </html>
-
