@@ -48,6 +48,7 @@
 		if(wasFound){
 			out.print("continue to make reservation");
 			
+			session.setAttribute("LOGIN_STATUS", "successful");
 			session.setAttribute("userID", Integer.toString(user));
 			String redirectPage = "user_dashboard.jsp";
 			response.sendRedirect(redirectPage);
@@ -55,6 +56,7 @@
 			//NOTE: Will redirect to the user log in, try making a message
 			//that will alert the user that their email or password was incorrect
 			System.out.print("user email or password was incorrect");
+			session.setAttribute("LOGIN_STATUS", "invalid_login");
 			String redirectPage = "login.jsp";
 			response.sendRedirect(redirectPage);
 		}

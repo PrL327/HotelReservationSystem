@@ -12,9 +12,15 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <style>
+  	body {
+  		background-image: url('photos/hotel-stock.jpeg');
+        background-size: 100% 100%;
+  	}
+  </style>
 </head>
 <body>
-	<div class="container jumbotron">	
+	<div class="container jumbotron" style="margin-top: 4vh;">	
 <%
 List<String> list = new ArrayList<String>();
 
@@ -26,26 +32,33 @@ try{
 	Statement stmt = con.createStatement();
 	Statement stmt_2 = con.createStatement();
 	Statement stmt_3 = con.createStatement();
+	Statement stmt_4 = con.createStatement();
+	Statement stmt_5 = con.createStatement();
 	String entity = request.getParameter("Hotel");
 	//Get the combobox from the HelloWorld.jsp
 	//Make a SELECT query from the sells table with the price range specified by the 'price' parameter at the HelloWorld.jsp
 	String str = "SELECT h.HotelID, h.name, p.phone, a.Street, a.City, a.State, a.Zip, a.Country FROM Hotel h, PhoneBook p, Location a WHERE h.HOTELID = p.hotelID AND h.hotelID = a.HotelID AND h.HOTELID = "+entity;
 	String str2 = "SELECT * FROM OffersBreakfast b WHERE b.HotelID = "+entity;
 	String str3 = "SELECT * FROM OffersServices s WHERE s.HOTELID = "+entity;
+	String str4 = "SELECT COUNT(*) FROM Room r WHERE r.HOTELID = "+entity;
+	String str5 = "SELECT r.RoomType FROM Room r WHERE r.HOTELID ="+entity+" GROUP BY r.RoomType";
 	//Run the query against the database.
 	ResultSet result = stmt.executeQuery(str);
 	ResultSet result2 = stmt_2.executeQuery(str2);
 	ResultSet result3 = stmt_3.executeQuery(str3);
+	ResultSet result4 = stmt_4.executeQuery(str4);
+	ResultSet result5 = stmt_5.executeQuery(str5);
 
 	//parse out the results
 	while (result.next()) {
 		//make a row
 		
 		//Print out current bar name:
-		out.print("<h2 style='margin-top:5vh; margin-bottom:3vh;'>");
+		out.print("<h2 style='margin-top:2vh; margin-bottom:3vh;'>");
 		//Print out current bar name:
 		out.print(result.getString("name"));
 		out.print("</h2>");
+		out.print("<div id='generalInfo'>");
 		out.print("<h4>General Info:</h4>");
 		out.print("<table class='table'>");
 		out.print("<tr>");
@@ -62,8 +75,29 @@ try{
 		out.print(result.getString("Street")+", "+result.getString("City")+", "+result.getString("state")+", "+result.getString("Country")+", "+result.getString("Zip"));
 		out.print("</td>");
 		out.print("</table>");
+		out.print("</div>");
 		
 	}
+	
+	out.print("<div id='roomsOffered'>");
+	out.print("<h4>Room Info: </h4>");
+	out.print("<table class='table'><tr>");
+	
+	while(result4.next()){
+		out.print("<td>");
+		out.print("# of Rooms: "+result4.getString("COUNT(*)"));
+		out.print("</td>");
+	}
+	out.print("<td>");
+	out.print("Room Types: ");
+	while(result5.next()){
+		out.print(result5.getString("RoomType") + ", ");
+	}
+	out.print("</td>");
+	out.print("</tr></table>");
+	out.print("</div>");
+		
+	  out.print("<div id='breakfastServices'>");
 	  out.print("<h4> Breakfasts & Services </h4>");
 	  out.print("<div class='row'>");
 	  out.print("<div class='col'>");
@@ -100,9 +134,9 @@ try{
 	  out.print("</ul>");
 	  out.print("</td></tr>");
 	  out.print("</table></div>");
+	  out.print("</div>");
 	  
-	  
-	
+
 	con.close();
  }
 catch (Exception e) {

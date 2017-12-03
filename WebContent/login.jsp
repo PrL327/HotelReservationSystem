@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%@ page session="true" %>
 <html>
   <head>
     <meta charset="utf-8">
@@ -26,12 +29,23 @@
         background-image: url('photos/skyline.jpeg');
         background-size: 100% 100%;
       }
+      .alert {
+   		display:inline-block;   
+	}
     </style>
     <link href="css/login.css" rel="stylesheet">
   </head>
   <body>
     <div class="container">
-      <div class="col-lg-4"></div>
+    <% try {
+        			if(session.getAttribute("LOGIN_STATUS") == "invalid_login"){
+        				out.println("<div style='margin-left:4vw;' class='alert alert-danger' role='alert'><strong>Invalid Login!</strong> Email/Password is inccorrect or account does not exsist.</div>");
+        			}
+        			
+        } catch (Exception e){
+        	
+        }
+        %>
       <div class="col-lg-4">
         <div class="jumbotron loginPane">
           <h4> Log in: </h4>
@@ -47,7 +61,6 @@
           </form>
         </div>
       </div>
-      <div class="col-lg-4"></div>
     </div>
   </body>
 </html>

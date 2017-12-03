@@ -12,11 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-    <title>Cover Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
-
-    <!-- Custom styles for this template -->
+    <title>Hotel</title>
+    
     <link href="css/cover.css" rel="stylesheet">
   </head>
 
@@ -52,7 +49,7 @@
                 <option value=784512231> The Charmant Hotel </option>
                 <option value=894561654> The Oxford Hotel </option>
               </select>
-              <input class="btn btn-lg btn-primary" type="submit" value="Submit" style="margin-top: 2vh">
+              <input class="btn btn-lg btn-primary" type="submit" value="Find" style="padding-left:-3vh; padding-right:-3vh; margin-top: 2vh">
             </p>
           </form>
           </main>
