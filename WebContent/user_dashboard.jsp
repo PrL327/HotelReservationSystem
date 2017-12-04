@@ -82,26 +82,33 @@
               <%
               try{
             	  
-                	String findReservation = "SELECT * FROM Reservation_made rm WHERE rm.CID = ?";
+                	String findReservation = "SELECT * FROM Reservation_Made rm WHERE rm.CID = ?";
           		PreparedStatement findReservation_statement = con.prepareStatement(findReservation);
           		findReservation_statement.setInt(1, userID);
-          	
           		ResultSet reservation_result = findReservation_statement.executeQuery();
+          		
+          		System.out.println("BEFORE");
+          		reservation_result.next();
+          		System.out.println(reservation_result.getInt("rm.HotelID"));
+          		System.out.println("AFTER");
+          		
+          		String find_hotel_reserved = "SELECT * FROM Hotel h WHERE h.HotelID = ?";
+      			PreparedStatement findHotel = con.prepareStatement(find_hotel_reserved);
+          		findHotel.setInt(1, reservation_result.getInt("rm.HotelID"));
+       
+          	
+          		ResultSet hotel_found = findHotel.executeQuery();
 	
-          		while(reservation_result.next())
+          		while(hotel_found.next())
           		{
           			
-          			String find_hotel_reserved = "SELECT h.name FROM Hotel h WHERE h.HotelID = "+reservation_result.getString("rm.HotelID");
-          			Statement findHotel = con.createStatement();
-              		ResultSet hotel_found = findHotel.executeQuery(find_hotel_reserved);
           			
           			out.print("<tr>");
-          			out.print("<td>"+reservation_result.getString("rm.InvoiceNo")+"</td>");
-          			out.print("<td>"+hotel_found.getString("h.name")+"</td>");
+          			out.print("<td><form action='view_reservation.jsp'>");
+          			out.print("<input class='btn btn-link' name='invoice' type='submit' value=\""+reservation_result.getString("rm.InvoiceNo")+"\">");
+          			out.print("</form></td>");
+          			out.print("<td>"+hotel_found.getString("name")+"</td>"); 
           			out.print("<td>"+reservation_result.getString("rm.TotalAmt")+"</td>");
-          			out.print("<form action='view_reservation.jsp'>");
-          			out.print("<button name='invoice' type='submit' value=\""+reservation_result.getString("rm.InvoiceNo")+"\">View..</button>");
-          			out.print("</form>");
          			out.print("</tr>");
           		}
           		con.close(); 
