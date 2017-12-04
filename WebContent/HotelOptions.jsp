@@ -254,29 +254,9 @@ public static String toScriptArray(String[] arr){
   }
   
   function populateBreakfast(id){
-	  var selection = id.slice(-1);
-	  document.getElementById("roomOptions_"+selection).removeAttribute("class");
+	  var selection = id;
 	  
 	  var cSelect = document.getElementById("Breakfast_Type_"+selection); 
-	  // remove the current options from the country select 
-	  var len=cSelect.options.length; 
-	  while (cSelect.options.length > 0) { 
-	  cSelect.remove(0); 
-	  } 
-	  var newOption; 
-	  // create new options 
-	  for (var i=0; i<breakfastType.length; i++) { 
-	  newOption = document.createElement("option"); 
-	  newOption.value = breakfastType[i];  // assumes option string and value are the same 
-	  newOption.text=breakfastType[i]; 
-	  // add the new option 
-	  try { 
-	  cSelect.add(newOption);  // this will fail in DOM browsers but is needed for IE 
-	  } 
-	  catch (e) { 
-	  cSelect.appendChild(newOption); 
-	  } 
-	  }
 	  
   }
   
@@ -306,13 +286,9 @@ public static String toScriptArray(String[] arr){
 	  var newRoomArea = document.getElementById(newRoomID);
 	  
 	  var updateFormControl = newRoomArea.getElementsByClassName("form-control");
-	  var updateButton = newRoomArea.getElementsByClassName("options btn btn-success");
-	  var optionsButton = updateButton[0];
-	  optionsButton.setAttribute("id","options_"+roomCount);
 	  
-	  var updateOptions = newRoomArea.getElementsByClassName("hidden")[0];
+	  var updateOptions = newRoomArea.getElementsByClassName("roomOptions")[0];
 	  updateOptions.setAttribute("id","roomOptions_"+roomCount);
-	  
 	  //update room select id
 	  var room_select = updateFormControl[0];
 	  room_select.setAttribute("id","roomSelection_"+roomCount);
@@ -330,8 +306,10 @@ public static String toScriptArray(String[] arr){
 	  check_out_date.setAttribute("id","Check_out_date_"+roomCount);
 	  
 	  var breakfast_type = updateFormControl[4];
+	  
 	  breakfast_type.setAttribute("id", "Breakfast_Type_"+roomCount);
 	  
+	  populateBreakfast(roomCount);
 	  var quantity = updateFormControl[5];
 	  quantity.setAttribute("id","Quantity_"+roomCount);
 	  
@@ -340,9 +318,12 @@ public static String toScriptArray(String[] arr){
 	  
 	  var totalLabel = updateFormControl[7];
 	  totalLabel.setAttribute("id", "total_"+roomCount);
-	  
+	  nullTotal();
   }
   
+  function nullTotal(){
+	  document.getElementById("total_"+roomCount).innerHTML = 0;
+  }
   function verify(){
 	  var num = 0;
 	  var rIndex = document.getElementById("roomSelection_1").selectedIndex;
@@ -380,6 +361,9 @@ public static String toScriptArray(String[] arr){
 </head>
 <body>
 
+<script>
+populateBreakfast(roomCount);
+</script>
 
 
 <form class="jumbotron" id = "reserve" method="query" action="VerifyReservation.jsp">
@@ -429,15 +413,12 @@ public static String toScriptArray(String[] arr){
             </div>
           </div>
         </fieldset>
-        <div class="col">
-         <button type="Button" href="#" id="options_1" class='options btn btn-success' onclick = "populateBreakfast(this.id);">Options</button>
-      </div>
       
       
       
       
       
-      <div id="roomOptions_1" class= "hidden" >
+      <div id="roomOptions_1" class= "roomOptions" >
         <fieldset>
           <h6>Breakfast & Services:</h6>
           <div class="col-sm-4" style="margin-left:2vw; margin-top:1vh;">
@@ -449,6 +430,16 @@ public static String toScriptArray(String[] arr){
                     <label for="Breakfast_Type_">Breakfast</label>
                     <select class="form-control" id="Breakfast_Type_1" placeholder="Hotel.." onchange="updatePrice(this.id);">
                       <option selected="selected">Choose a Breakfast</option>
+                       <% 
+                  if(hotelsBreakfast!=null){
+                	  count = 0;
+                	  while(count<hotelsBreakfast.size()){
+          	    		out.print("<option value = \""+hotelsBreakfast.get(count).type+"\">"+ hotelsBreakfast.get(count).type+"</option>");
+          	    		count++;
+          	    		
+          	    	}
+                  }
+                %> 
                     </select>
                   </div>
                 </div>
@@ -487,10 +478,10 @@ public static String toScriptArray(String[] arr){
     <label class = "form-control" id="total_1"></label>
           <div class="form-row">
             <div class="col-sm-2">
-              <a href="#" class="addservices">Add another Service</a>
+              <a href="#" id= "addservice_1" class="addservices">Add another Service</a>
             </div>
             <div class="col">
-              <a href="#" class="addbreakfast">Add another Breakfast</a>
+              <a href="#" id = "addbreakfast_1" class="addbreakfast">Add another Breakfast</a>
             </div>
             
           </div>
