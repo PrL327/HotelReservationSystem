@@ -75,7 +75,6 @@
                 <th>Invoice #</th>
                 <th>Hotel</th>
                 <th>Cost</th>
-                <th>More..</th>
                 </tr>
               </thead>
               <tbody>
@@ -87,29 +86,29 @@
           		findReservation_statement.setInt(1, userID);
           		ResultSet reservation_result = findReservation_statement.executeQuery();
           		
-          		System.out.println("BEFORE");
-          		reservation_result.next();
-          		System.out.println(reservation_result.getInt("rm.HotelID"));
-          		System.out.println("AFTER");
           		
-          		String find_hotel_reserved = "SELECT * FROM Hotel h WHERE h.HotelID = ?";
-      			PreparedStatement findHotel = con.prepareStatement(find_hotel_reserved);
-          		findHotel.setInt(1, reservation_result.getInt("rm.HotelID"));
-       
-          	
-          		ResultSet hotel_found = findHotel.executeQuery();
-	
-          		while(hotel_found.next())
+          		while(reservation_result.next())
           		{
-          			
-          			
+          			String find_hotel_reserved = "SELECT * FROM Hotel h WHERE h.HotelID = ?";
+	      			PreparedStatement findHotel = con.prepareStatement(find_hotel_reserved);
+	          		findHotel.setInt(1, reservation_result.getInt("rm.HotelID"));
+	          		System.out.print(reservation_result.getInt("rm.HotelID"));
+	          		ResultSet hotel_found = findHotel.executeQuery();
+	          		hotel_found.next();
+        
+	
+          		do
+          		{
+    	
           			out.print("<tr>");
           			out.print("<td><form action='view_reservation.jsp'>");
           			out.print("<input class='btn btn-link' name='invoice' type='submit' value=\""+reservation_result.getString("rm.InvoiceNo")+"\">");
           			out.print("</form></td>");
-          			out.print("<td>"+hotel_found.getString("name")+"</td>"); 
-          			out.print("<td>"+reservation_result.getString("rm.TotalAmt")+"</td>");
+          			out.print("<td>"+hotel_found.getString("name")+"</td>");
+          			out.print("<td> $"+reservation_result.getString("rm.TotalAmt")+"</td>");
          			out.print("</tr>");
+          		}
+          		while(hotel_found.next());
           		}
           		con.close(); 
               }

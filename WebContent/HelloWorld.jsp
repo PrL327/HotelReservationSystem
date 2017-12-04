@@ -46,7 +46,7 @@
                 <option value=687564646> Stephanie Inn </option>
                 <option value=784512231> The Charmant Hotel </option>
                 <option value=894561654> The Oxford Hotel </option>
-              </select>
+              </select> 
               <input class="btn btn-lg btn-primary" type="submit" value="Find" style="padding-left:-3vh; padding-right:-3vh; margin-top: 2vh">
           </form>
           </main>
