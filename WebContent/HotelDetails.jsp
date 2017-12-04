@@ -17,6 +17,9 @@
   		background-image: url('photos/hotel-stock.jpeg');
         background-size: 100% 100%;
   	}
+  	.hidden {
+  		visibility: hidden;
+  	}
   </style>
 </head>
 <body>
@@ -77,7 +80,7 @@ try{
 		out.print("</table>");
 		out.print("</div>");
 		
-	}
+	
 	
 	out.print("<div id='roomsOffered'>");
 	out.print("<h4>Room Info: </h4>");
@@ -136,6 +139,22 @@ try{
 	  out.print("</table></div>");
 	  out.print("</div>");
 	  
+	  out.print("<div class='row'>");
+	  out.print("<form action='review_btypes.jsp'>");
+		out.print("<input class='hidden' name='invoice_no' type='submit' value=\""+result.getString("HotelID")+"\">");
+		out.print("<input class='btn btn-link' type='submit' value='View Breakfast Reviews'>");
+		out.print("</form>");
+		out.print("<form action='review.jsp'>");
+		out.print("<input class='hidden' name='invoice_no' type='submit' value=\""+result.getString("HotelID")+"\">");
+		out.print("<input class='btn btn-link' type='submit' value='View Service Reviews'>");
+		out.print("</form>");
+		out.print("<form action='review.jsp'>");
+		out.print("<input class='hidden' name='invoice_no' type='submit' value=\""+result.getString("HotelID")+"\">");
+		out.print("<input class='btn btn-link' type='submit' value='View Room Reviews'>");
+		out.print("</form>");
+	  out.print("</div>");
+	  
+	}
 
 	con.close();
  }
