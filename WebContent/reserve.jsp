@@ -70,7 +70,7 @@ public List<String> getHotelNames(){
     		count++;
     	}
         %>
-      </select><input type="submit" value="submit">
+      </select><input class = "btn btn-success" type="submit" value="submit">
     </div>
   </form>
 </body>

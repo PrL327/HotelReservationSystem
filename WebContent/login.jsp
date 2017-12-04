@@ -30,7 +30,9 @@
         background-size: 100% 100%;
       }
       .alert {
-   		display:inline-block;   
+   		display:inline-block;
+   		width:680px;
+        margin-left: 12vw;   
 	}
     </style>
     <link href="css/login.css" rel="stylesheet">
@@ -39,7 +41,7 @@
     <div class="container">
     <% try {
         			if(session.getAttribute("LOGIN_STATUS") == "invalid_login"){
-        				out.println("<div style='margin-left:4vw;' class='alert alert-danger' role='alert'><strong>Invalid Login!</strong> Email/Password is inccorrect or account does not exsist.</div>");
+        				out.println("<div class='alert alert-danger' role='alert'><strong>Invalid Login!</strong> Email/Password is inccorrect or account does not exsist.</div>");
         			}
         			
         } catch (Exception e){

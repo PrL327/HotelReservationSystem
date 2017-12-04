@@ -13,6 +13,9 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <style>
+    		th, td { width:30px }
+    </style>
   </head>
   <body>
   <%
@@ -38,7 +41,7 @@
 	String lastName = result.getString("c.last_name");
 	
 	System.out.println("Email: "+ email + " address: "+ address);
-	con.close();
+	
 	
   %>
     <div class="container">
@@ -67,28 +70,56 @@
       <div>
         <h4>Reservations:</h4>
           <table class="table">
-            <thead>
-              <tr>
+              <thead>
+              	<tr>
                 <th>Invoice #</th>
                 <th>Hotel</th>
-                <th>Room</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                <th>Cost</th>
                 <th>More..</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Num</td>
-                <td>Hotel Name</td>
-                <td>Room Number</td>
-                <td>Start</td>
-                <td>End</td>
-                <td>HyperLink<td>
-              </tr>
-            </tbody>
+                </tr>
+              </thead>
+              <tbody>
+              <%
+              try{
+            	  
+                	String findReservation = "SELECT * FROM Reservation_made rm WHERE rm.CID = ?";
+          		PreparedStatement findReservation_statement = con.prepareStatement(findReservation);
+          		findReservation_statement.setInt(1, userID);
+          	
+          		ResultSet reservation_result = findReservation_statement.executeQuery();
+	
+          		while(reservation_result.next())
+          		{
+          			
+          			String find_hotel_reserved = "SELECT h.name FROM Hotel h WHERE h.HotelID = "+reservation_result.getString("rm.HotelID");
+          			Statement findHotel = con.createStatement();
+              		ResultSet hotel_found = findHotel.executeQuery(find_hotel_reserved);
+          			
+          			out.print("<tr>");
+          			out.print("<td>"+reservation_result.getString("rm.InvoiceNo")+"</td>");
+          			out.print("<td>"+hotel_found.getString("h.name")+"</td>");
+          			out.print("<td>"+reservation_result.getString("rm.TotalAmt")+"</td>");
+          			out.print("<form action='view_reservation.jsp'>");
+          			out.print("<button name='invoice' type='submit' value=\""+reservation_result.getString("rm.InvoiceNo")+"\">View..</button>");
+          			out.print("</form>");
+         			out.print("</tr>");
+          		}
+          		con.close(); 
+              }
+              catch(Exception e){
+            	  	out.println("<tr><td>No Reservations Found</td></tr>");
+              }
+              %>
+              </tbody>
         </table>
-      <Form method = "reserve" action = "reserve.jsp"><Button type= "Submit" class="btn btn-success">Reserve</Button></Form>
+        <div class="row">
+ 			<div class="col">
+      	  		<Form method = "reserve" action = "reserve.jsp"><Button type= "Submit" class="btn btn-success">Reserve</Button></Form>
+      	 	</div>
+      	 	<div class="col">
+      	  		<Form method = "logout" action = "login.jsp"><Button type= "Submit" class="btn btn-primary">Log Out</Button></Form>
+      	 	</div>
+      	 </div>
       </div>
     </div>
   </body>

@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-    <title>Hotel</title>
+    <title>Hotel Reservation System</title>
     
     <link href="css/cover.css" rel="stylesheet">
   </head>
@@ -26,7 +26,6 @@
               <h3 class="masthead-brand">Welcome</h3>
               <nav class="nav nav-masthead">
                 <a class="nav-link active" href="#">Home</a>
-                <a class="nav-link" href="#">View Reviews</a>
                 <a class="nav-link" href="#">Stats</a>
                 <a class="nav-link" href="#">Log In</a>
               </nav>
@@ -40,7 +39,6 @@
               <a href="login.jsp" class="btn btn-lg btn-primary">Reserve Now</a>
             </p>
             <form method=HotelDetails action="HotelDetails.jsp">
-              <p>
               <h4> Find a Hotel and all its info:</h4>
               <select name="Hotel" class="form-control">
                 <option value=88877741> The Nantucket Hotel & Resort </option>
@@ -50,15 +48,8 @@
                 <option value=894561654> The Oxford Hotel </option>
               </select>
               <input class="btn btn-lg btn-primary" type="submit" value="Find" style="padding-left:-3vh; padding-right:-3vh; margin-top: 2vh">
-            </p>
           </form>
           </main>
-
-          <!-- <footer class="mastfoot">
-            <div class="inner">
-              <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-            </div>
-          </footer> -->
         </div>
       </div>
     </div>
