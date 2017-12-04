@@ -9,7 +9,22 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<%
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="js/reserve.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <style>
+    .hidden {
+      visibility: hidden;
+    }
+  </style>
+  <%
 String hotelSelected = request.getParameter("hotelName");
 System.out.println(hotelSelected);
 
@@ -31,12 +46,6 @@ try{
 	
 	if(result.next()){
 		hotelID = result.getInt("h.HotelID");
-	}
-	
-	if(hotelID == 0){
-		System.out.println("Not able to find hotel id");
-		con.close();
-		out.close();
 	}
 	
 	//Statement to get hotel services 
@@ -195,21 +204,6 @@ public static String toScriptArray(String[] arr){
 }
 %>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="js/reserve.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-  <style>
-    .hidden {
-      visibility: hidden;
-    }
-  </style>
   
   <script>
   var serviceTypeArray = <%= toScriptArray(sTypeList)%> 
@@ -231,28 +225,39 @@ public static String toScriptArray(String[] arr){
   </script>
   
   <script type="text/javascript"> 
-  
+  var hotelID = <%= hotelID%>
   var roomCount = 1;
   
-  function updatePrice(selectObj){
+  function updatePrice(id){
+	  var selection = id.slice(-1);
 	  // get the index of the selected option 
-	  var idx = selectObj.selectedIndex;
 	  // get the country select element via its known id 
-	  var cSelect = document.getElementById("test");
+	  var cSelect = document.getElementById("total_"+selection);
 	  var total = 0;
 	  
-	  total = +roomPriceArray[idx-1];
+	  var sSelectIndex = document.getElementById("Services_"+selection)
+	  if(sSelectIndex.selectedIndex!=null && sSelectIndex.selectedIndex>0){
+	  	total = +serviceCostArray[sSelectIndex.selectedIndex-1];
+	  }
+	  var bSelectIndex = document.getElementById("Breakfast_Type_"+selection);
 	  
-	  var bSelectIndex = document.getElementById("Breakfast_Type_");
+	  if(bSelectIndex.selectedIndex!=null && bSelectIndex.selectedIndex>0){
+	  	total = +total + +breakfastPriceList[bSelectIndex.selectedIndex-1];
+	  }
 	  
-	  total = +total + +breakfastPriceList[bSelectIndex.selectedIndex-1];
-	  total = Math.round(total*100)/100
+	  var rSelectIndex = document.getElementById("roomSelection_"+selection);
+	  if(rSelectIndex.selectedIndex!=null && rSelectIndex.selectedIndex>0){
+	  	total = +total + +roomPriceArray[rSelectIndex.selectedIndex-1];
+	  }
+	  total = Math.round(total*100)/100;
 	  cSelect.innerHTML = total;
   }
   
-  function populateBreakfast(){
+  function populateBreakfast(id){
+	  var selection = id.slice(-1);
+	  document.getElementById("roomOptions_"+selection).removeAttribute("class");
 	  
-	  var cSelect = document.getElementById("Breakfast_Type_"); 
+	  var cSelect = document.getElementById("Breakfast_Type_"+selection); 
 	  // remove the current options from the country select 
 	  var len=cSelect.options.length; 
 	  while (cSelect.options.length > 0) { 
@@ -276,7 +281,12 @@ public static String toScriptArray(String[] arr){
   }
   
   function cloneReserve(){
-	  var roomAreaID = "Room_1";
+	  if(roomCount >2){
+		  alert("You can not reserve more than 3 rooms!");
+		  return;
+	  }
+	  
+	  var roomAreaID = "Room_";
 	  roomAreaID=  roomAreaID + roomCount;
 	  
 	  var roomArea = document.getElementById("Room_1");
@@ -284,22 +294,25 @@ public static String toScriptArray(String[] arr){
 	  
 	  roomCount = +roomCount + 1;
 	  
-	 // roomAreaClone.setAttribute("class","Room_"+roomCount);
-	  //roomAreaClone.setAttribute("id","Room_"+roomCount);
+	  roomAreaClone.setAttribute("class","Room_"+roomCount);
+	  roomAreaClone.setAttribute("id","Room_"+roomCount);
 	  document.getElementById("RoomReservation_").appendChild(roomAreaClone);
 	  
-	  //updateIDs();
-	 // 
+	  updateIDs();
   }
   
   function updateIDs(){
 	  var newRoomID = "Room_"+roomCount;
 	  var newRoomArea = document.getElementById(newRoomID);
-	  var updateFormControl = newRoomArea.getElementsByClassName("form-control");
-	  var updateButton = newRoomArea.getElementsByClassName("col");
 	  
+	  var updateFormControl = newRoomArea.getElementsByClassName("form-control");
+	  var updateButton = newRoomArea.getElementsByClassName("options btn btn-success");
 	  var optionsButton = updateButton[0];
 	  optionsButton.setAttribute("id","options_"+roomCount);
+	  
+	  var updateOptions = newRoomArea.getElementsByClassName("hidden")[0];
+	  updateOptions.setAttribute("id","roomOptions_"+roomCount);
+	  
 	  //update room select id
 	  var room_select = updateFormControl[0];
 	  room_select.setAttribute("id","roomSelection_"+roomCount);
@@ -325,8 +338,42 @@ public static String toScriptArray(String[] arr){
 	  var services__ = updateFormControl[6];
 	  services__.setAttribute("id", "Services_"+roomCount);
 	  
+	  var totalLabel = updateFormControl[7];
+	  totalLabel.setAttribute("id", "total_"+roomCount);
+	  
   }
   
+  function verify(){
+	  var num = 0;
+	  var rIndex = document.getElementById("roomSelection_1").selectedIndex;
+	  var sIndex = document.getElementById("Services_1").selectedIndex;
+	  var bIndex = document.getElementById("Breakfast_Type_1").selectedIndex;
+	  
+	  var card = document.getElementById("card_type");
+	  var cardType = card.options[card.selectedIndex].text;
+	  
+	  document.getElementById("card_type_used").value = cardType;
+	  
+	  
+	  var totalPrice = document.getElementById("total_1").innerText;
+	  
+	  var roomSelected = roomNoArray[rIndex-1];
+	  var serviceSelected = serviceTypeArray[sIndex-1];
+	  var bSelected = breakfastType[bIndex-1];
+	  
+	 var totalInput = document.getElementById("totalPrice");
+	 totalInput.value = totalPrice;
+	 document.getElementById("service").value = serviceSelected;
+	 document.getElementById("breakfast").value = bSelected;  
+	 document.getElementById("room").value = roomSelected;
+	 
+	 document.getElementById("hotelID").value = hotelID;
+	end();
+  }
+  
+  function end(){
+	  document.getElementById("reserve").submit();
+  }
   
   </script>
   
@@ -335,7 +382,7 @@ public static String toScriptArray(String[] arr){
 
 
 
-<form class="jumbotron">
+<form class="jumbotron" id = "reserve" method="query" action="VerifyReservation.jsp">
     <h4>Room Reservation Details:<Small> Reserve up to 3 Rooms</small> </h4>
     
     <a href="">View Hotel Rooms</a>
@@ -347,7 +394,7 @@ public static String toScriptArray(String[] arr){
             <div class="col-2">
               <div class="form-group">
                 <label for="Room_Select_">Room</label>
-                <select class="form-control" id="roomSelection_1" onchange = "updatePrice(this);">
+                <select class="form-control" id="roomSelection_1" onchange = "updatePrice(this.id);">
             <option value = 0 >Pick a Room</option>
            <%
         int count = 0;
@@ -365,32 +412,32 @@ public static String toScriptArray(String[] arr){
             <div class="col-2">
               <div class="form-group">
                 <label>Number of Guests in Room:</label>
-                <input id="Num_Of_Guest_1"type=text class="form-control">
+                <input id="Num_Of_Guest_1"type=text class="form-control" name="Num_of_Guest_1">
               </div>
             </div>
             <div class="col-2">
               <div class="form-group">
                 <label>From:</label>
-                <input id="Check_in_date_1" type=date class="form-control">
+                <input id="Check_in_date_1" type=date class="form-control" name="Check_in_date_1">
               </div>
             </div>
             <div class="col-2">
               <div class="form-group">
                 <label>To:</label>
-                <input id="Check_out_date_1" type=date class="form-control">
+                <input id="Check_out_date_1" type=date class="form-control" name="Check_out_date_1">
               </div>
             </div>
           </div>
         </fieldset>
         <div class="col">
-         <button type="Button" href="#" id="options_1" class='options btn btn-success' onclick = "populateBreakfast(this);">Options</button>
+         <button type="Button" href="#" id="options_1" class='options btn btn-success' onclick = "populateBreakfast(this.id);">Options</button>
       </div>
       
       
       
       
       
-      <div id="roomOptions" class= "hidden" >
+      <div id="roomOptions_1" class= "hidden" >
         <fieldset>
           <h6>Breakfast & Services:</h6>
           <div class="col-sm-4" style="margin-left:2vw; margin-top:1vh;">
@@ -400,7 +447,7 @@ public static String toScriptArray(String[] arr){
                 <div class="col">
                   <div class="form-group">
                     <label for="Breakfast_Type_">Breakfast</label>
-                    <select class="form-control" id="Breakfast_Type_" placeholder="Hotel..">
+                    <select class="form-control" id="Breakfast_Type_1" placeholder="Hotel.." onchange="updatePrice(this.id);">
                       <option selected="selected">Choose a Breakfast</option>
                     </select>
                   </div>
@@ -408,7 +455,7 @@ public static String toScriptArray(String[] arr){
                 <div class="col">
                   <div class="form-group">
                     <label for="BQuantity_">Quantity</label>
-                    <input class="form-control" id= "Quantity_"size=2>
+                    <input class="form-control" id= "Quantity_1"size=2 name="Quantity_1">
                   </div>
                 </div>
               </div>
@@ -417,8 +464,8 @@ public static String toScriptArray(String[] arr){
             <div class="col-sm-6" id="ServicesOption_">
               <div class="services form-group">
                 <label for="Services_">Services</label>
-                <select class="form-control" id="Services_" placeholder="Hotel..">
-                  <option selected="selected">Choose a Service</option> 
+                <select class="form-control" id="Services_1" placeholder="Hotel.." onchange="updatePrice(this.id)">
+                  <option selected="selected" >Choose a Service</option> 
                   <% 
                   if(hotelsServices!=null){
                 	  count = 0;
@@ -433,10 +480,11 @@ public static String toScriptArray(String[] arr){
               </div>
             </div>
             <div class = "col">
-            <h4>Room total: </h4>
-            <label id="test">Test</label>
+            
             </div>
           </div>
+          <h4>Room total: </h4>
+    <label class = "form-control" id="total_1"></label>
           <div class="form-row">
             <div class="col-sm-2">
               <a href="#" class="addservices">Add another Service</a>
@@ -444,20 +492,20 @@ public static String toScriptArray(String[] arr){
             <div class="col">
               <a href="#" class="addbreakfast">Add another Breakfast</a>
             </div>
+            
           </div>
         </fieldset>
       </div>
     </div>
+    
     </div>
     
     
     
     <div class="form-row">
       <div class="col-sm-2">
-        <!--  <button href="#" class='btn btn-primary addsection' onclick = "cloneReserve()">Add Another Room</button>
-      	-->
       </div>
-      <button onclick = "cloneReserve();">Add Another Room</button>
+      <button  type = "Button" onclick = "cloneReserve();">Add Another Room</button>
       <div class="col">
         <button type="Button" href="#" id="next" class='next btn btn-success'>Next</button>
       </div>
@@ -473,7 +521,7 @@ public static String toScriptArray(String[] arr){
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Card Number</label>
-            <input class='form-control' type='text' id="card_num">
+            <input class='form-control' type='text' id="card_num" name = "card_num">
           </div>
         </div>
         <div class="col-2">
@@ -491,7 +539,7 @@ public static String toScriptArray(String[] arr){
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>CVC Num</label>
-            <input class='form-control' type='text' size=3 placeholder="CVC" id="cvc_num">
+            <input class='form-control' type='text' size=3 placeholder="CVC" id="cvc_num" name="cvc_num">
           </div>
         </div>
       </div>
@@ -499,7 +547,7 @@ public static String toScriptArray(String[] arr){
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Name on Card</label>
-            <input class='form-control' type='text' id="name_on_card">
+            <input class='form-control' type='text' id="name_on_card" name="name_on_card">
           </div>
         </div>
         <div class="col-2">
@@ -511,13 +559,22 @@ public static String toScriptArray(String[] arr){
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Billing Address</label>
-            <input class='form-control' type='text' size=3 placeholder="Address" id="billing_addr">
+            <input class='form-control' type='text' size=3 placeholder="Address" id="billing_addr" name="billing_addr">
           </div>
         </div>
       </div>
     </fieldset>
-    <button type="add" class="btn btn-primary btn-lg">Submit</button>
+    <button type="Button"  onclick="verify();">Submit</button>
   </div>
+  <div id = "reservationDetails" class="hidden">
+	<input id = "totalPrice" name = "totalPrice">
+	<input id = "service" name = "service">
+	<input id = "room" name = "room">
+	<input id = "breakfast" name = "breakfast">
+	<input id = "card_type_used" name = "card_type_used">
+	<input id = "hotelID" name = "hotelID">
+	</div>
   </form>
+  
 </body>
 </html>
