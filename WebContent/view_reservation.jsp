@@ -69,15 +69,15 @@
 	out.print("<h5>Total Cost: $"+gen_info.getString("rm.TotalAmt")+"</h5>");
 	out.print("<div class='row'>");
 	out.print("<form action='review_btypes.jsp'>");
-	out.print("<input class='hidden' name='invoice_no_for_breakfast' type='submit' value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
+	out.print("<input class='hidden' name=\"invoice_no_for_breakfast\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Breakfast'>");
 	out.print("</form>");
 	out.print("<form action='review.jsp'>");
-	out.print("<input class='hidden' name='invoice_no_for_service' type='submit' value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
+	out.print("<input class='hidden' name=\"invoice_no_for_service\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Service'>");
 	out.print("</form>");
 	out.print("<form action='review.jsp'>");
-	out.print("<input class='hidden' name='invoice_no_for_room' type='submit' value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
+	out.print("<input class='hidden' name=\"invoice_no_for_room\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Room'>");
 	out.print("</form>");
 	out.print("</div>");

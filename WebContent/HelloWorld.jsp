@@ -12,9 +12,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-    <title>Hotel Reservation System</title>
-    
+    <title>Cover Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
     <link href="css/cover.css" rel="stylesheet">
+    <style>
+    .page-select {
+      width: 25vw !important;
+      flex: none !important;
+    }
+    </style>
   </head>
 
   <body>
@@ -26,12 +36,12 @@
               <h3 class="masthead-brand">Welcome</h3>
               <nav class="nav nav-masthead">
                 <a class="nav-link active" href="#">Home</a>
+                <a class="nav-link" href="#">Create an Account</a>
                 <a class="nav-link" href="#">Stats</a>
-                <a class="nav-link" href="#">Log In</a>
+                <a class="nav-link" href="login.jsp">Log In</a>
               </nav>
             </div>
           </header>
-
           <main role="main" class="inner cover">
             <h1 class="cover-heading">Travel. And Stay with the Best</h1>
             <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
@@ -40,14 +50,19 @@
             </p>
             <form method=HotelDetails action="HotelDetails.jsp">
               <h4> Find a Hotel and all its info:</h4>
-              <select name="Hotel" class="form-control">
-                <option value=88877741> The Nantucket Hotel & Resort </option>
-                <option value=654684664> The Inn at Lost Creek </option>
-                <option value=687564646> Stephanie Inn </option>
-                <option value=784512231> The Charmant Hotel </option>
-                <option value=894561654> The Oxford Hotel </option>
-              </select> 
-              <input class="btn btn-lg btn-primary" type="submit" value="Find" style="padding-left:-3vh; padding-right:-3vh; margin-top: 2vh">
+              <div class="input-group" style="margin-left:6vw;">
+                <select name = "Hotel" class="form-control page-select" style="margin-right: 2vw;">
+                  <option value=88877741> The Nantucket Hotel & Resort </option>
+                  <option value=654684664> The Inn at Lost Creek </option>
+                  <option value=687564646> Stephanie Inn </option>
+                  <option value=784512231> The Charmant Hotel </option>
+                  <option value=894561654> The Oxford Hotel </option>
+                </select>
+                <span class="input-group">
+                  <input class="btn btn-primary" value="Go" type="submit" style="padding-left:2vw; padding-right:2vw;">
+                </span>
+            </div>
+            </p>
           </form>
           </main>
         </div>
