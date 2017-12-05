@@ -26,20 +26,24 @@
 </head>
 
 <body>
+<%
+String bType_Invoice = request.getParameter("invoice_no_for_breakfast");
+
+%>
 
 <%!
-public List<String> getBreakfastTypes(){
+public List<String> getBreakfastTypes(String bType_Invoice){
+	
 	
 	try{
 	String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
 	Class.forName("com.mysql.jdbc.Driver");
 	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
-    
+	
 	Statement getBTypes = con.createStatement();
-	String entity = request.getParameter("invoice_no_for_breakfast");
-	String bTypesString = " SELECT Reservation_Includes.bType FROM Reservation_Includes GROUP BY Reservation_Includes.HotelID HAVING Reservation_Includes.InvoiceNo =" + entity;
+	String bTypesString = "SELECT Reservation_Includes.bType FROM Reservation_Includes WHERE Reservation_Includes.InvoiceNo = "+bType_Invoice;
     ResultSet bType = getBTypes.executeQuery(bTypesString);
-
+   
 	List<String> bTypeNames = new ArrayList<String>();
 	while(bType.next()){
 		String temp = bType.getString("Reservation_Includes.bType");
@@ -65,7 +69,7 @@ public List<String> getBreakfastTypes(){
       <select class="form-control" id="bType_review" name="bTypes">
         <option selected="selected">Select Type</option>
         <%
-        List<String> bTypeNames = getBreakfastTypes();
+        List<String> bTypeNames = getBreakfastTypes(bType_Invoice);
         int count = 0;
     	while(count<bTypeNames.size()){
     		out.print("<option value = \""+bTypeNames.get(count)+"\">"+ bTypeNames.get(count)+"</option>");
