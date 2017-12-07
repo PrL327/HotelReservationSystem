@@ -221,44 +221,306 @@ public static String toScriptArray(String[] arr){
   var breakfastType = <%= toScriptArray(bTypeList) %>
   
   var currTotal = 0;
-
+  
+  var room_bOption1 = 1;
+  var room_sOption1 = 1;
+  var room_bOption2 = 1;
+  var room_sOption2 = 1;
+  var room_bOption3 = 1;
+  var room_sOption3 = 1;
+  
+  var max_room_bOption1 = 0;
+  var max_room_sOption1 = 0;
+  var max_room_bOption2 = 0;
+  var max_room_sOption2 = 0;
+  var max_room_bOption3 = 0;
+  var max_room_sOption3 = 0;
+  
+  
   </script>
   
   <script type="text/javascript"> 
   var hotelID = <%= hotelID%>
   var roomCount = 1;
+
+  function updateNumOfGuest(id){
+	  var roomOption = document.getElementById(id);
+	  var index = id.slice(-1);
+	  
+	  var guestList = document.getElementById("Num_Of_Guest_"+index);
+	  
+	  var maxGuest = roomCapacityArray[roomOption.selectedIndex-1];
+	  
+	  var newOption; 
+	  //removing previous list
+	  while (guestList.options.length > 0) { 
+	  	guestList.remove(0); 
+	  } 
+	  // create new options 
+	  for (var i=0; i<=maxGuest; i++) { 
+	  newOption = document.createElement("option"); 
+	  newOption.value = i;  // assumes option string and value are the same 
+	  newOption.text= i; 
+	  // add the new option 
+		  try { 
+			  guestList.add(newOption);  // this will fail in DOM browsers but is needed for IE 
+		  } 
+		  catch (e) { 
+			  guestList.appendChild(newOption); 
+		  } 
+	  }
+	  
+	  //need to reset the number of services upon room change
+	  
+	  removeDuplicates(index);
+	  if(index == 1){
+		  room_bOption1 = 1;
+		  room_sOption1 = 1;
+	 } 
+	  
+	  if(index == 2) {
+		  room_bOption2 = 1;
+		  room_sOption2 = 1;
+	  } 
+	  
+	  if(index == 3){
+		  room_bOption3 = 1;
+		  room_sOption3 = 1;
+	  }
+	  
+	  var quantityList = document.getElementById("Quantity_"+index+"_1");
+	  
+	  while (quantityList.options.length > 0) { 
+		  quantityList.remove(0); 
+	  }
+	  
+	  for (var i = 0; i<=maxGuest; i++) { 
+	  newOption = document.createElement("option"); 
+	  newOption.value = i;  // assumes option string and value are the same 
+	  newOption.text= i; 
+	  // add the new option 
+		  try { 
+			  quantityList.add(newOption);  // this will fail in DOM browsers but is needed for IE 
+		  } 
+		  catch (e) { 
+			  quantityList.appendChild(newOption); 
+		  } 
+	  }
+	  var totalLabel = document.getElementById("total_"+index);
+	  updatePrice(id);
+  }
+  
+  function updateQuantity(id){
+	  var index = id.slice(-1);
+	  
+	  removeDuplicates(index);
+	  if(index == 1){
+		  room_bOption1 = 1;
+		  room_sOption1 = 1;
+	 } 
+	  
+	  if(index == 2) {
+		  room_bOption2 = 1;
+		  room_sOption2 = 1;
+	  } 
+	  
+	  if(index == 3){
+		  room_bOption3 = 1;
+		  room_sOption3 = 1;
+	  }
+	  
+	  var quantityList = document.getElementById("Quantity_"+index+"_1");
+	  
+	  var numOfGuest = +document.getElementById(id).selectedIndex;
+	  
+	  while (quantityList.options.length > 0) { 
+		  quantityList.remove(0); 
+	  }
+	  
+	  for (var i = 0; i<=numOfGuest; i++) { 
+	  newOption = document.createElement("option"); 
+	  newOption.value = i;  // assumes option string and value are the same 
+	  newOption.text= i; 
+	  // add the new option 
+		  try { 
+			  quantityList.add(newOption);  // this will fail in DOM browsers but is needed for IE 
+		  } 
+		  catch (e) { 
+			  quantityList.appendChild(newOption); 
+		  } 
+	  }
+	  var totalLabel = document.getElementById("total_"+index);
+	  updatePrice(id);
+	  var arr = [index, numOfGuest];
+	  updateMaxOptions(arr);
+  }
+  
+  function updateMaxOptions(arr){
+	  var num = arr[1];
+	  var index = arr[0];
+	  
+	  if(index == 1){
+	  max_room_bOption1 = num;
+	  max_room_sOption1 = num;
+	  return;
+	  }
+	  if(index == 2){
+	  max_room_bOption2 = num;
+	  max_room_sOption2 = num;
+	  return;
+	  }
+	  max_room_bOption3 = num;
+	  max_room_sOption3 = num;
+	  return;
+  }
+  
+  function updateNumOfBreakfast(id){
+	  var index = id.slice(-3);
+	  index = index.charAt(0);
+	  var numBOption = 0;
+	  if(index == 1){
+		  numBOptions = room_bOption1;
+	 } 
+	  
+	  if(index == 2) {
+		  numBOptions = room_bOption2;
+	  } 
+	  
+	  if(index == 3){
+		  numBOptions = room_bOption3;
+	  }
+	  var count = 1;
+	  var numOfB = 0;
+	  var error = 0;
+	  //looping through the number of breadfast options per current room
+	  while(true){
+		  var bQauntityIndex = document.getElementById("Quantity_"+index+"_"+count);
+		  if(bQauntityIndex!=null){
+			  var bNum = bQauntityIndex.selectedIndex;
+			  numOfB  = +numOfB + bNum;
+			  count = +count + 1;
+		  }else{break;}
+		  
+	  }
+	  
+	  var maxB = 0;
+	  if(index == 1){ 
+		  if(numOfB > max_room_bOption1){
+			  error = 1;
+			  maxB = max_room_bOption1;
+		  }else{
+		  	room_bOption1 = numOfB;
+		  }
+		  
+	  }
+	  
+	  if(index == 2){ 
+		  if(numOfB > max_room_bOption2){
+			  error = 1;
+			  maxB = max_room_bOption2;
+		  }else{
+		  	room_bOption2 = numOfB;
+		  }
+	  }
+	  
+	  if(index == 3){
+		  if(numOfB > max_room_bOption3){
+			  error = 1;
+			  maxB = max_room_bOption3
+		  }else{
+		  	room_bOption3 = numOfB;
+		  }
+	  }
+	  //max num of breakfast was reached
+	  if(error == 1){
+		  alert("You can not have more than "+ maxB + " breakfast");
+		  var optionSelected = document.getElementById(id);
+		  if(optionSelected!=null){
+			  optionSelected.selectedIndex = 0;
+		  }
+		  
+		  return;
+	  }
+	  updatePrice(id);
+  }
   
   function updatePrice(id){
-	  var selection = id.slice(-1);
+	  
+	  var selection = 0;
+	  var option = id.slice(-3);
+	  option = option.charAt(0);
+	  if(isNaN(option)){
+		  selection = id.slice(-1);
+	  }else{
+		  selection = option;
+	  }
+	  
+	  var numBOptions = 0;
+	  var numSOptions = 0;
+	  
+	  if(selection == 1){
+		  numBOptions = room_bOption1;
+		  numSOptions = room_sOption1;
+	 } 
+	  
+	  if(selection == 2) {
+		  numBOptions = room_bOption2;
+		  numSOptions = room_sOption2;
+	  } 
+	  
+	  if(selection == 3){
+		  numBOptions = room_bOption3;
+		  numSOptions = room_sOption3;
+	  }
+	  
+	  
 	  // get the index of the selected option 
 	  // get the country select element via its known id 
 	  var cSelect = document.getElementById("total_"+selection);
 	  var total = 0;
 	  
-	  var sSelectIndex = document.getElementById("Services_"+selection)
-	  if(sSelectIndex.selectedIndex!=null && sSelectIndex.selectedIndex>0){
-	  	total = +serviceCostArray[sSelectIndex.selectedIndex-1];
-	  }
-	  var bSelectIndex = document.getElementById("Breakfast_Type_"+selection);
-	  
-	  if(bSelectIndex.selectedIndex!=null && bSelectIndex.selectedIndex>0){
-	  	total = +total + +breakfastPriceList[bSelectIndex.selectedIndex-1];
-	  }
-	  
+	 
 	  var rSelectIndex = document.getElementById("roomSelection_"+selection);
+	  
 	  if(rSelectIndex.selectedIndex!=null && rSelectIndex.selectedIndex>0){
 	  	total = +total + +roomPriceArray[rSelectIndex.selectedIndex-1];
+	  }
+	  
+	  var count = 1;
+	  //looping through the number of breadfast options per current room
+	  while(true){
+		  var bSelectIndex = document.getElementById("Breakfast_Type_"+selection+"_"+count);
+		  var bQauntityIndex = document.getElementById("Quantity_"+selection+"_"+count);
+		  if(bQauntityIndex!=null){
+			  var bNum = bQauntityIndex.selectedIndex;
+			  if(bSelectIndex.selectedIndex!=null && bSelectIndex.selectedIndex>0){
+				var bprice = breakfastPriceList[bSelectIndex.selectedIndex-1];
+				
+			  	total = +total + +(bprice * bNum);
+			  }
+			  count = +count + 1;
+		  }else{break;}
+		 
+	  }
+	  
+	  //looping through the number of services in the current room
+	  count = 1;
+	  while(count<=numSOptions){
+		  
+		  var sSelectIndex = document.getElementById("Services_"+selection+"_"+count)
+		  try{
+		  if(sSelectIndex.selectedIndex!=null && sSelectIndex.selectedIndex>0){
+		  	total = +total + +serviceCostArray[sSelectIndex.selectedIndex-1];
+		  }
+		  }catch(err){
+			  document.getElementById("search").innerHTML = "Services_"+selection+"_"+count;
+		  }
+		  count = +count + 1;
 	  }
 	  total = Math.round(total*100)/100;
 	  cSelect.innerHTML = total;
   }
   
-  function populateBreakfast(id){
-	  var selection = id;
-	  
-	  var cSelect = document.getElementById("Breakfast_Type_"+selection); 
-	  
-  }
   
   function cloneReserve(){
 	  if(roomCount >2){
@@ -276,6 +538,9 @@ public static String toScriptArray(String[] arr){
 	  
 	  roomAreaClone.setAttribute("class","Room_"+roomCount);
 	  roomAreaClone.setAttribute("id","Room_"+roomCount);
+	  
+	  
+	  
 	  document.getElementById("RoomReservation_").appendChild(roomAreaClone);
 	  
 	  updateIDs();
@@ -289,6 +554,13 @@ public static String toScriptArray(String[] arr){
 	  
 	  var updateOptions = newRoomArea.getElementsByClassName("roomOptions")[0];
 	  updateOptions.setAttribute("id","roomOptions_"+roomCount);
+	  
+	  var updateOther = newRoomArea.getElementsByClassName("options");
+	  var bOptions = updateOther[0];
+	  bOptions.setAttribute("id","BreakfastOption_"+roomCount);
+	  
+	  var sOptions = updateOther[1];
+	  sOptions.setAttribute("id","ServicesOption_"+roomCount);
 	  //update room select id
 	  var room_select = updateFormControl[0];
 	  room_select.setAttribute("id","roomSelection_"+roomCount);
@@ -296,76 +568,273 @@ public static String toScriptArray(String[] arr){
 	  //update num of guess id
 	  var num_of_guest = updateFormControl[1];
 	  num_of_guest.setAttribute("id","Num_Of_Guest_"+roomCount);
+	  num_of_guest.setAttribute("name","Num_Of_Guest_"+roomCount);
 	  
 	  //update check in date
 	  var check_in_date = updateFormControl[2];
 	  check_in_date.setAttribute("id","Check_in_date_"+roomCount);
+	  check_in_date.setAttribute("name","Check_in_date_"+roomCount);
 	  
 	  //update id of checkout date
 	  var check_out_date = updateFormControl[3];
 	  check_out_date.setAttribute("id","Check_out_date_"+roomCount);
+	  check_out_date.setAttribute("name","Check_out_date_"+roomCount);
 	  
 	  var breakfast_type = updateFormControl[4];
 	  
-	  breakfast_type.setAttribute("id", "Breakfast_Type_"+roomCount);
+	  breakfast_type.setAttribute("id", "Breakfast_Type_"+roomCount+"_1");
 	  
-	  populateBreakfast(roomCount);
 	  var quantity = updateFormControl[5];
-	  quantity.setAttribute("id","Quantity_"+roomCount);
+	  quantity.setAttribute("id","Quantity_"+roomCount+"_1");
+	  quantity.setAttribute("name", "Quantity_"+roomCount+"_1");
 	  
 	  var services__ = updateFormControl[6];
-	  services__.setAttribute("id", "Services_"+roomCount);
+	  services__.setAttribute("id", "Services_"+roomCount+"_1");
 	  
-	  var totalLabel = updateFormControl[7];
-	  totalLabel.setAttribute("id", "total_"+roomCount);
+	  var totalLabel = newRoomArea.getElementsByClassName("amount")[0];
+	  totalLabel.setAttribute("id","total_"+roomCount);
 	  nullTotal();
+	  
+	  var updateAddService = newRoomArea.getElementsByClassName("addservices")[0];
+	  updateAddService.setAttribute("id", "addserive_"+roomCount);
+	  
+	  var updateAddBreakfast = newRoomArea.getElementsByClassName("addbreakfast")[0];
+	  updateAddBreakfast.setAttribute("id","addbreakfast"+roomCount);
+	  
+	  removeDuplicates(roomCount);
   }
   
+  function removeDuplicates(section){
+	  var newServiceOptions = document.getElementById("ServicesOption_"+section);
+	  var listOfOptions = newServiceOptions.getElementsByClassName("form-control");
+	  
+	  if(listOfOptions.length > 1){
+		  var num = listOfOptions.length-1;
+		  while(num > 0){
+			  var temp = listOfOptions[num];
+			  temp.remove();
+			  num--;
+		  }
+		  
+		  
+	  }
+	  listOfOptions[0].setAttribute("id", "Services_"+section+"_1");
+	  var newBreakfastOptions = document.getElementById("BreakfastOption_"+section);
+	  var listofBoptions = newBreakfastOptions.getElementsByClassName("breakfasts");
+	  
+	  if(listofBoptions.length > 1){
+		  var num = listofBoptions.length-1;
+		  while(num>0){
+			  var temp = listofBoptions[num];
+			  temp.remove();
+			  num--;
+		  }
+	  }
+	  
+	  
+  }
   function nullTotal(){
 	  document.getElementById("total_"+roomCount).innerHTML = 0;
   }
-  function verify(){
-	  var num = 0;
-	  var rIndex = document.getElementById("roomSelection_1").selectedIndex;
-	  var sIndex = document.getElementById("Services_1").selectedIndex;
-	  var bIndex = document.getElementById("Breakfast_Type_1").selectedIndex;
+  
+  function addservice(id){
+	  var selection= id.slice(-1); 
+	  var numSOptions = 0;
 	  
-	  var card = document.getElementById("card_type");
-	  var cardType = card.options[card.selectedIndex].text;
+	  if(selection == 1){
+		  numSOptions = room_sOption1;
+		  if(numSOptions > max_room_sOption1 - 1){
+			  alert("You can select more than "+max_room_sOption1+" services");
+			  return;
+		  }
+		  room_sOption1 = +room_sOption1 + 1;
+	 } 
 	  
-	  document.getElementById("card_type_used").value = cardType;
+	  if(selection == 2) {
+		  numSOptions = room_sOption2;
+		  if(numSOptions > max_room_sOption2 - 1){
+			  alert("You can not select more than "+max_room_sOption2+" services");
+			  return;
+		  }
+		  room_sOption2 = +room_sOption2 + 1;
+	  } 
+	  
+	  if(selection == 3){
+		  numSOptions = room_sOption3;
+		  if(numSOptions > max_room_sOption3 - 1){
+			  alert("You can not select more than "+ max_room_sOption3 + " services");
+			  return;
+		  }
+		  room_sOption3 = +room_sOption3 + 1;
+	  }
 	  
 	  
-	  var totalPrice = document.getElementById("total_1").innerText;
+	  numSOptions = +numSOptions + 1;
 	  
-	  var roomSelected = roomNoArray[rIndex-1];
-	  var serviceSelected = serviceTypeArray[sIndex-1];
-	  var bSelected = breakfastType[bIndex-1];
+	  var serviceAreaID = "Services_";
 	  
-	 var totalInput = document.getElementById("totalPrice");
-	 totalInput.value = totalPrice;
-	 document.getElementById("service").value = serviceSelected;
-	 document.getElementById("breakfast").value = bSelected;  
-	 document.getElementById("room").value = roomSelected;
-	 
-	 document.getElementById("hotelID").value = hotelID;
-	end();
+	  var serviceArea = document.getElementById(serviceAreaID+selection+"_1");
+	  var serviceAreaClone = serviceArea.cloneNode(true);
+	  
+	  serviceAreaClone.setAttribute("id","Services_"+selection+"_"+numSOptions);
+	  document.getElementById("ServicesOption_"+selection).appendChild(serviceAreaClone);
   }
   
+  function addbreakfast(id){
+	  var selection= id.slice(-1); 
+	  var numBOptions = 0;
+	  
+	  if(selection == 1){
+		  numBOptions = room_bOption1;
+		  if(numBOptions > max_room_bOption1 - 1){
+			  alert("You can get more than "+max_room_bOption1+ " breakfasts");
+			  return;
+		  }
+		  room_bOption1 = +room_bOption1 + 1;
+	 } 
+	  
+	  if(selection == 2) {
+		  numBOptions = room_bOption2;
+		  if(numBOptions > max_room_bOption2 - 1){
+			  alert("You can not get more than "+max_room_bOption2+" breakfasts");
+			  return;
+		  }
+		  room_bOption2 = +room_bOption2 + 1;
+	  } 
+	  
+	  if(selection == 3){
+		  numBOptions = room_bOption3;
+		  if(numBOptions > max_room_bOption3 - 1){
+			  alert("You can not get mroe than "+max_room_bOption3+" breakfasts");
+			  return;
+		  }
+		  room_BOption3 = +room_bOption3 + 1;
+	  }
+	  
+	  
+	  numBOptions = +numBOptions + 1;
+	  
+	 
+	  var breakfastArea = document.getElementById("breakfasts");
+	  var breakfastAreaClone = breakfastArea.cloneNode(true);
+	  
+	  var newElements = breakfastAreaClone.getElementsByClassName("form-control");
+	  newElements[0].setAttribute("id", "Breakfast_Type_"+selection+"_"+numBOptions);
+	  newElements[1].setAttribute("id","Quantity_"+selection+"_"+numBOptions);
+	  newElements[1].setAttribute("name","Quantity_"+selection+"_"+numBOptions);
+	  
+	  document.getElementById("BreakfastOption_"+selection).appendChild(breakfastAreaClone);
+  }
+  
+  function verify(){
+	  
+	  var section = 1;
+	  var numOfRooms = 0;
+	  var submissionForm = document.getElementById("reservationDetails");
+	  
+	  while(true){
+		  var currRoom = document.getElementById("roomSelection_"+section);
+		  
+		  if(currRoom!=null){
+			  var roomSelected = currRoom.selectedIndex;
+			  if(roomSelected>0){
+				  var roomName = "roomPicked_"+section;
+				  submissionForm.appendChild(newInput(roomName, roomSelected));
+				  
+				  var index = 0;
+				  var callIndex = 1;//could be possible that index doesn't exists
+				  var done = 0;
+				  //get breakfast and quantity for room X
+				  while(done!=1){
+					  index++;
+					  var currBreakfast = document.getElementById("Breakfast_Type_"+section+"_"+index);
+					  var currQuantity = document.getElementById("Quantity_"+section+"_"+index);
+					  if(currBreakfast!=null){
+						  
+						  var bIndex = currBreakfast.selectedIndex;
+						  var qIndex = currQuantity.selectedIndex;
+						  //if not breakfast was selected skip it, if quantity is none skip it
+						  if(bIndex>0 && qIndex !=0){
+						  
+							  var bName = "Breakfast_Type_"+section+"_"+callIndex;
+							  var bValue = breakfastType[bIndex-1];
+							  var bQName = "Quantity_"+section+"_"+callIndex;
+							  var bQValue = qIndex;
+							  submissionForm.appendChild(newInput(bName, bValue));
+							  submissionForm.appendChild(newInput(bQName, bQValue));
+							  callIndex++;
+						  }else{
+							  continue;
+						  }
+					  }else{
+						  done = 1;
+					  }
+				  }
+				  done = 0;
+				  //getting the services for this room
+				  index = 0;
+				  callIndex = 1;
+				  while(done!=1){
+					  index++;
+					  var currService = document.getElementById("Services_"+section+"_"+index);
+					  if(currService!=null){
+						  
+						  var sIndex = currService.selectedIndex;
+						  //if not breakfast was selected skip it, if quantity is none skip it
+						  if(sIndex>0){
+						  
+							  var sName = "Services_"+section+"_"+callIndex;
+							  var sValue = serviceTypeArray[sIndex-1];
+							  submissionForm.appendChild(newInput(sName, sValue));
+							  callIndex++;
+						  }else{
+							  continue;
+						  }
+					  }else{
+						  done = 1;
+					  }
+				  }
+				  
+				  var currTotal = document.getElementById("total_"+section);
+				  var totalName = "totalForRoom_"+section;
+				  submissionForm.appendChild(newInput(totalName, currTotal.innerText));
+				  
+				  numOfRooms++;
+				  section++; 
+			  }else{
+				  alert("room was not selected for option "+ section);
+				  return;
+			  }
+		  }else{
+			  break;
+		  }
+	  }
+	  
+	  var cardUsed = document.getElementById("card_type");
+	  var cardIndex = cardUsed.selectedIndex;
+	  var cards = ["None","Visa","MasterCard","Amex","Discover"];
+	  submissionForm.appendChild(newInput("card_type_used", cards[cardIndex]));
+	  submissionForm.appendChild(newInput("numOfRoomsReserved",numOfRooms));
+	  submissionForm.appendChild(newInput("hotelID", <%= hotelID%>))
+	  end();
+  }
+  
+  function newInput(name, value){
+	  var form = document.getElementById("form-line").cloneNode(true);
+	  form.setAttribute("name", name);
+	  form.setAttribute("value", value);
+	  return form;
+  }
   function end(){
 	  document.getElementById("reserve").submit();
   }
+  
   
   </script>
   
 </head>
 <body>
-
-<script>
-populateBreakfast(roomCount);
-</script>
-
-
+<label id = "search">Query</label>
 <form class="jumbotron" id = "reserve" method="query" action="VerifyReservation.jsp">
     <h4>Room Reservation Details:<Small> Reserve up to 3 Rooms</small> </h4>
     
@@ -378,7 +847,7 @@ populateBreakfast(roomCount);
             <div class="col-2">
               <div class="form-group">
                 <label for="Room_Select_">Room</label>
-                <select class="form-control" id="roomSelection_1" onchange = "updatePrice(this.id);">
+                <select class="form-control" id="roomSelection_1" onchange = "updatePrice(this.id); updateNumOfGuest(this.id);">
             <option value = 0 >Pick a Room</option>
            <%
         int count = 0;
@@ -396,7 +865,9 @@ populateBreakfast(roomCount);
             <div class="col-2">
               <div class="form-group">
                 <label>Number of Guests in Room:</label>
-                <input id="Num_Of_Guest_1"type=text class="form-control" name="Num_of_Guest_1">
+                <select id="Num_Of_Guest_1"type=text class="form-control" name="Num_of_Guest_1" onchange = "updateQuantity(this.id);">
+                <option value =0>Select Number of Guest</option>
+                </select>
               </div>
             </div>
             <div class="col-2">
@@ -422,13 +893,13 @@ populateBreakfast(roomCount);
         <fieldset>
           <h6>Breakfast & Services:</h6>
           <div class="col-sm-4" style="margin-left:2vw; margin-top:1vh;">
-            <div class="row" style="margin-right:2vw;" id="BreakfastOption_1">
-              <div class="breakfasts col">
+            <div class="row options" style="margin-right:2vw;" id="BreakfastOption_1">
+              <div id = "breakfasts" class="breakfasts col">
               <div class="form-row">
                 <div class="col">
                   <div class="form-group">
                     <label for="Breakfast_Type_">Breakfast</label>
-                    <select class="form-control" id="Breakfast_Type_1" placeholder="Hotel.." onchange="updatePrice(this.id);">
+                    <select class="form-control" id="Breakfast_Type_1_1"  onchange="updatePrice(this.id);">
                       <option selected="selected">Choose a Breakfast</option>
                        <% 
                   if(hotelsBreakfast!=null){
@@ -446,16 +917,18 @@ populateBreakfast(roomCount);
                 <div class="col">
                   <div class="form-group">
                     <label for="BQuantity_">Quantity</label>
-                    <input class="form-control" id= "Quantity_1"size=2 name="Quantity_1">
+                    <select class="form-control" id= "Quantity_1_1" name="Quantity_1_1" onchange = "updateNumOfBreakfast(this.id);">
+                    <option>Quantity</option>
+                    </select>
                   </div>
                 </div>
               </div>
               </div>
               </div>
-            <div class="col-sm-6" id="ServicesOption_">
-              <div class="services form-group">
+            <div class="col-sm-6" >
+              <div class="services form-group options" id="ServicesOption_1">
                 <label for="Services_">Services</label>
-                <select class="form-control" id="Services_1" placeholder="Hotel.." onchange="updatePrice(this.id)">
+                <select class="form-control" id="Services_1_1"  onchange="updatePrice(this.id)">
                   <option selected="selected" >Choose a Service</option> 
                   <% 
                   if(hotelsServices!=null){
@@ -475,13 +948,13 @@ populateBreakfast(roomCount);
             </div>
           </div>
           <h4>Room total: </h4>
-    <label class = "form-control" id="total_1"></label>
+    <label class = "amount" id="total_1"></label>
           <div class="form-row">
             <div class="col-sm-2">
-              <a href="#" id= "addservice_1" class="addservices">Add another Service</a>
+              <a href="#" id= "addservice_1" class="addservices" onclick = "addservice(this.id);">Add another Service</a>
             </div>
             <div class="col">
-              <a href="#" id = "addbreakfast_1" class="addbreakfast">Add another Breakfast</a>
+              <a href="#" id = "addbreakfast_1" class="addbreakfast" onclick = "addbreakfast(this.id);">Add another Breakfast</a>
             </div>
             
           </div>
@@ -518,12 +991,12 @@ populateBreakfast(roomCount);
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Card Type</label>
-            <select class="form-control" id="card_type" placeholder="Hotel..">
+            <select class="form-control" id="card_type" placeholder="Hotel.." >
             <option selected="selected">Card Type</option>
-            <option>Visa</option>
-            <option>MasterCard</option>
-            <option>Amex</option>
-            <option>Discover</option>
+            <option id ="Visa" value="Visa">Visa</option>
+            <option id="MasterCard" value="MasterCard">MasterCard</option>
+            <option id="Amex" value="Amex">Amex</option>
+            <option id="Discover" value="Discover">Discover</option>
           </select>
           </div>
         </div>
@@ -544,7 +1017,7 @@ populateBreakfast(roomCount);
         <div class="col-2">
           <div class='form-group required'>
             <label class='control-label'>Exp Date</label>
-            <input class='form-control' type='month' id="exp_date">
+            <input class='form-control' type='month' id="exp_date" name="exp_date">
           </div>
         </div>
         <div class="col-2">
@@ -558,12 +1031,9 @@ populateBreakfast(roomCount);
     <button type="Button"  onclick="verify();">Submit</button>
   </div>
   <div id = "reservationDetails" class="hidden">
-	<input id = "totalPrice" name = "totalPrice">
-	<input id = "service" name = "service">
-	<input id = "room" name = "room">
-	<input id = "breakfast" name = "breakfast">
-	<input id = "card_type_used" name = "card_type_used">
-	<input id = "hotelID" name = "hotelID">
+
+  <input id = "form-line">
+  
 	</div>
   </form>
   
