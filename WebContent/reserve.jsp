@@ -20,18 +20,7 @@
       visibility: hidden;
     }
   </style>
-  
-  <script>
-  
-  var states = new Array(5);
-  
-  states["empty"] = ["select a state"];
-  states["MA"] = ["Nantucket"];
-  states["CO"] = ["Mountain Village", "Denver"];
-  states["OR"] = ["Cannon Beach"];
-  states["WI"] = ["La Crosse"];
 
-  </script>
   
 </head>
 
