@@ -41,6 +41,7 @@ try{
 	String getIDStatement = "SELECT * FROM Hotel h WHERE h.name = ?";
 	PreparedStatement ps = con.prepareStatement(getIDStatement);
 	ps.setString(1, hotelSelected);
+	
 	ResultSet result = ps.executeQuery();
 	
 	

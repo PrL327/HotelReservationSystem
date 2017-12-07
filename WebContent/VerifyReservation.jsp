@@ -117,10 +117,8 @@ if(!failed){
 		System.out.println("There was some error getting details of the rooms");
 	}
 }
-//int customerID = Integer.valueOf((String)session.getAttribute("userID"));
-int customerID = 106786662;
+int customerID = Integer.valueOf((String)session.getAttribute("userID"));
 int hotelID = Integer.valueOf(request.getParameter("hotelID"));
-System.out.println("Payment stuff: "+ card_type + "\n"+cvc_num + "\n"+name_on_card+"\n"+exp_date);
 
 if(failed){
 	//there was some error with the days and stuff
@@ -162,8 +160,6 @@ if(failed){
 		}
 		
 		//inserting the reservation
-	
-		//this needs to be changed
 		int roomOneNum = rooms.size();
 		float total = 0;
 		int t = 0;
@@ -176,14 +172,13 @@ if(failed){
 		String insertStatement = "INSERT INTO Reservation_Made VALUES(?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement insertRes = con.prepareStatement(insertStatement);
 		insertRes.setInt(1,invoiceNo);
-		insertRes.setInt(2,roomOneNum);
-		insertRes.setInt(3, hotelID);
-		//simple code
+		insertRes.setInt(2, hotelID);
 		String today = Today.getToday();
-		insertRes.setString(4,today);
-		insertRes.setFloat(5, total);
-		insertRes.setInt(6,customerID);
-		insertRes.setString(7,card_num);
+		insertRes.setString(3,today);
+		insertRes.setFloat(4, total);
+		insertRes.setInt(5,customerID);
+		insertRes.setString(6,card_num);
+		insertRes.setInt(7,roomOneNum);
 		
 		try{
 			

@@ -21,35 +21,68 @@
     }
   </style>
   
+  <script>
   
+  var states = new Array(5);
+  
+  states["empty"] = ["select a state"];
+  states["MA"] = ["Nantucket"];
+  states["CO"] = ["Mountain Village", "Denver"];
+  states["OR"] = ["Cannon Beach"];
+  states["WI"] = ["La Crosse"];
+
+  </script>
   
 </head>
 
 <body>
 
 <%!
-public List<String> getHotelNames(){
+//using the search result of the user, this page will generate a list of hotels that are available by name
+public List<String> getHotelNames(HttpServletRequest request){
+	
+	
+	String country = request.getParameter("country");
+	String state = request.getParameter("state");
+	String city = request.getParameter("city");
+	List<String> hotelNames = new ArrayList<String>();
+	
 	
 	try{
-	String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
-	Class.forName("com.mysql.jdbc.Driver");
-	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+		String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+		   
+		String getByLocation = "SELECT * FROM Location l WHERE l.Country = ? AND l.state = ? AND l.City = ?";
+		PreparedStatement ps = con.prepareStatement(getByLocation);
+		ps.setString(1, country);
+		ps.setString(2, state);
 
-	Statement getHotels = con.createStatement();
-	String hotelsString = "SELECT * FROM Hotel h";
-	ResultSet hotels = getHotels.executeQuery(hotelsString);
-
-	List<String> hotelNames = new ArrayList<String>();
-	while(hotels.next()){
-		String temp = hotels.getString("h.name");
-		hotelNames.add(temp);
-	}
-	con.close();
-	return hotelNames;
+		ResultSet result = ps.executeQuery();
+	
+		while(result.next()){
+			
+			int hotelId = result.getInt("l.HotelID");
+			System.out.println(hotelId);
+			String getHotelName = "SELECT * FROM Hotel h WHERE h.HotelID = ?";
+			PreparedStatement hotelStatement = con.prepareStatement(getHotelName);
+			
+			hotelStatement.setInt(1,hotelId);
+			
+			
+			try{
+				ResultSet returnedName = hotelStatement.executeQuery();
+				returnedName.next();
+				hotelNames.add(returnedName.getString("h.name"));
+			}catch(Exception e){
+				System.out.println("There was an error getting the hotel names");
+			}
+		}
 	}catch(Exception e){
-		System.out.println("Error getting hotels names");
-		return null;
+		System.out.println("There was an error making the hotel search call ");
 	}
+	
+	return hotelNames;
 }
 %>
 
@@ -63,7 +96,7 @@ public List<String> getHotelNames(){
       <select class="form-control" id="Hotel_Selection" name="hotelName">
         <option selected="selected">Select a Hotel</option>
         <%
-        List<String> hotelNames = getHotelNames();
+        List<String> hotelNames = getHotelNames(request);
         int count = 0;
     	while(count<hotelNames.size()){
     		out.print("<option value = \""+hotelNames.get(count)+"\">"+ hotelNames.get(count)+"</option>");
