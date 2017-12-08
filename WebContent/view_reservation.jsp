@@ -43,29 +43,8 @@
 	
 	ResultSet gen_info = stmt.executeQuery(str);
 	ResultSet brkservice = stmt_2.executeQuery(str2);
-
-  while(gen_info.next() && brkservice.next())
-  {
+	gen_info.next();
 	out.print("<h2 style='margin-top:5vh;'>Invoice: "+gen_info.getString("rm.invoiceNo")+"</h2>");
-	out.print("<h5 style='margin-top:5vh;'>Room Reservation Details<h5>");
-	out.print("<table class='Table'>");
-	out.print("<tr>");
-	out.print("<td>");
-	out.print("Room: "+gen_info.getString("rr.room_no"));
-	out.print("</td>");
-	out.print("<td>");
-	out.print("Staying From/To: "+gen_info.getString("rr.InDate")+" - "+gen_info.getString("rr.OutDate"));
-	out.print("</td>");
-	out.print("</tr>");
-	out.print("<tr>");
-	out.print("<td>");
-	out.print("Breakfast(s) Ordered: "+brkservice.getString("ri.bType"));
-	out.print("</td>");
-	out.print("<td>");
-	out.print("Service(s) Requested: "+brkservice.getString("rc.sType"));
-	out.print("</td>");
-	out.print("</tr>");
-	out.print("</table>");
 	out.print("<h5>Total Cost: $"+gen_info.getString("rm.TotalAmt")+"</h5>");
 	out.print("<div class='row'>");
 	out.print("<form action='review_btypes.jsp'>");
@@ -81,7 +60,57 @@
 	out.print("<input class='btn btn-primary' type='submit' value='Review Room'>");
 	out.print("</form>");
 	out.print("</div>");
-  }
+	
+
+  do
+  {
+	out.print("<h5 style='margin-top:5vh;'>Room Reservation Details<h5>");
+	out.print("<table class='Table'>");
+	out.print("<tr>");
+	out.print("<td>");
+	out.print("Room: "+gen_info.getString("rr.room_no"));
+	out.print("</td>");
+	out.print("<td>");
+	out.print("Staying From/To: "+gen_info.getString("rr.InDate")+" - "+gen_info.getString("rr.OutDate"));
+	out.print("</td>");
+	out.print("</tr>");
+
+	try {
+		    
+			brkservice.next();
+			String breakfast = brkservice.getString("ri.bType");
+			
+			out.print("<tr>");
+			out.print("<td>");
+			out.print("Breakfast(s) Ordered: ");
+			out.print(breakfast+" ");
+			out.print("</td>");
+			out.print("<td>");
+			out.print("Service(s) Requested: ");
+			out.print(brkservice.getString("rc.sType")+" ");
+			out.print("</td>");
+			out.print("</tr>");
+	
+		
+	}
+	catch(Exception e) {
+		out.print("<tr>");
+		out.print("<td>");
+		out.print("Breakfast(s) Ordered: none ");
+		out.print("</td>");
+		out.print("<td>");
+		out.print("Service(s) Requested: none");
+		out.print("</td>");
+		out.print("</tr>");
+		
+	}
+	
+	out.print("</table>");
+	
+  } while(gen_info.next());
+  
+  
+ 
 %>
 </div>
 </body>

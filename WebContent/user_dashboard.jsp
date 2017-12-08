@@ -120,7 +120,7 @@
         </table>
         <div class="row">
  			<div class="col">
-      	  		<Form method = "reserve" action = "reserve.jsp"><Button type= "Submit" class="btn btn-success">Reserve</Button></Form>
+      	  		<Form method = "reserve" action = "searchHotel.jsp"><Button type= "Submit" class="btn btn-success">Reserve</Button></Form>
       	 	</div>
       	 	<div class="col">
       	  		<Form method = "logout" action = "login.jsp"><Button type= "Submit" class="btn btn-primary">Log Out</Button></Form>
