@@ -46,7 +46,8 @@ public List<String> getHotelNames(HttpServletRequest request){
 		PreparedStatement ps = con.prepareStatement(getByLocation);
 		ps.setString(1, country);
 		ps.setString(2, state);
-
+		ps.setString(3, city);
+		
 		ResultSet result = ps.executeQuery();
 	
 		while(result.next()){
