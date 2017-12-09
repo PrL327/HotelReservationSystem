@@ -36,13 +36,17 @@
 	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");
 	Statement stmt = con.createStatement();
 	Statement stmt_2 = con.createStatement();
+	Statement stmt_3 = con.createStatement();
 	String invoice_no = request.getParameter("invoice");
 
 	String str = "SELECT * FROM Reservation_Made rm, Room_Reserves rr WHERE rm.invoiceNo = rr.InvoiceNo AND rm.invoiceNo ="+invoice_no;
-	String str2 = "SELECT * FROM Reservation_Contains rc, Reservation_Includes ri WHERE ri.invoiceNo = rc.invoiceNo AND rc.invoiceNo ="+invoice_no;
+	String str2 = "SELECT * FROM Reservation_Contains rc WHERE rc.invoiceNo ="+invoice_no;
+	String str_breakfast = "SELECT * FROM Reservation_Includes ri WHERE ri.invoiceNo = "+invoice_no;
 	
 	ResultSet gen_info = stmt.executeQuery(str);
 	ResultSet brkservice = stmt_2.executeQuery(str2);
+	ResultSet breakfast_include = stmt_3.executeQuery(str_breakfast);
+	
 	gen_info.next();
 	out.print("<h2 style='margin-top:5vh;'>Invoice: "+gen_info.getString("rm.invoiceNo")+"</h2>");
 	out.print("<h5>Total Cost: $"+gen_info.getString("rm.TotalAmt")+"</h5>");
@@ -74,37 +78,45 @@
 	out.print("Staying From/To: "+gen_info.getString("rr.InDate")+" - "+gen_info.getString("rr.OutDate"));
 	out.print("</td>");
 	out.print("</tr>");
+	out.print("<tr>");
+	out.print("<td>");
+	out.print("Breakfast(s) Ordered: ");
 
 	try {
 		    
-			brkservice.next();
-			String breakfast = brkservice.getString("ri.bType");
 			
-			out.print("<tr>");
-			out.print("<td>");
-			out.print("Breakfast(s) Ordered: ");
-			out.print(breakfast+" ");
+			
+			while(breakfast_include.next()) {
+				String breakfast = breakfast_include.getString("ri.bType");
+				System.out.print("BREAKFAST: "+breakfast);
+				out.print(breakfast_include.getString("ri.bType")+", ");
+			
+			}
 			out.print("</td>");
-			out.print("<td>");
-			out.print("Service(s) Requested: ");
-			out.print(brkservice.getString("rc.sType")+" ");
-			out.print("</td>");
-			out.print("</tr>");
 	
 		
 	}
 	catch(Exception e) {
-		out.print("<tr>");
-		out.print("<td>");
-		out.print("Breakfast(s) Ordered: none ");
+		out.print("none");
 		out.print("</td>");
-		out.print("<td>");
-		out.print("Service(s) Requested: none");
-		out.print("</td>");
-		out.print("</tr>");
+		
 		
 	}
-	
+	out.print("<td>");
+	out.print("Service(s) Requested: ");
+	try {
+		while(brkservice.next()){
+		out.print(brkservice.getString("rc.sType")+", ");
+		}
+		
+	}catch(Exception e){
+		
+		out.print("none");
+		
+		
+	}
+	out.print("</td>");
+	out.print("</tr>");
 	out.print("</table>");
 	
   } while(gen_info.next());
