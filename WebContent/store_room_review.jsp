@@ -15,7 +15,7 @@ String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.
 Class.forName("com.mysql.jdbc.Driver");
 Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");
 
-String room_type = request.getParameter("rTypes");
+String room_no = request.getParameter("rTypes");
 int rating = Integer.valueOf(request.getParameter("r_rating"));
 int hotel_id = Integer.valueOf(request.getParameter("review_hotelID"));
 
@@ -35,10 +35,10 @@ ps.setInt(4, customer_id);
 ps.setString(5, current_date);
 ps.executeUpdate();
 
-String new_room_review = "INSERT INTO BreakReview_Evaluated values(?, ?, ?)";
+String new_room_review = "INSERT INTO RoomReview_Assesed values(?, ?, ?)";
 PreparedStatement ps_2 = con.prepareStatement(new_room_review);
 ps_2.setInt(1, review_id);
-ps_2.setString(2, room_type);
+ps_2.setString(2, room_no);
 ps_2.setInt(3, hotel_id);
 ps_2.executeUpdate();
 

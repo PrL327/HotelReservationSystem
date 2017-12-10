@@ -9,6 +9,7 @@
 <title>Our Five Best Customers</title>
 </head>
 <body>
+Our Best Customers from this time period are:
 <%
 
 	String Startdate_rcv = request.getParameter("Best_Customer_StartDate");
@@ -17,11 +18,9 @@
 	
 	String start_date[] = Startdate_rcv.split("-");
 	String StartDateNewFormat = start_date[1]+"/"+start_date[2]+"/"+start_date[0];
-	out.print(StartDateNewFormat);
 	
 	String end_date[] = EndDate_rcv.split("-");
 	String EndDateNewFormat = end_date[1]+"/"+end_date[2]+"/"+end_date[0];
-	out.print(EndDateNewFormat);
 	
 	String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
 	Class.forName("com.mysql.jdbc.Driver");
@@ -33,6 +32,15 @@
 	PreparedStatement ps = con.prepareStatement(getIDStatement);
 	ps.setString(1, StartDateNewFormat);
 	ps.setString(2, EndDateNewFormat);
+	ps.executeQuery();
+	ResultSet best_customers = ps.executeQuery();
+	
+	
+	while(best_customers.next()){
+		out.print(best_customers.getString("c.first_name"));
+		out.print(" ");
+		out.print(best_customers.getString("t3.total"));	
+	}
 	
 
 %>

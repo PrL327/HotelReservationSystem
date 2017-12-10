@@ -16,7 +16,7 @@
 	<input type="submit" value="Submit">
 </form>
 <form action ="customer_query.jsp">
-	<p> Our Five Best Customers </p>
+	<p> Up to our Five Best Customers </p>
 	<label>Start Date: </label><input name="Best_Customer_StartDate" type="Date">
 	<label>End Date: </label><input name="Best_Customer_EndDate" type="Date">
 	<input type="submit" value="Submit">
