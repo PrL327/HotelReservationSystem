@@ -23,11 +23,6 @@
       visibility: hidden;
     }
   </style>
-  <script>
-  $(document).on('click', '.next', function() {
-	    $("#Payment_info").removeClass("hidden");;
-	});
-  </script>
   <%
 String hotelSelected = request.getParameter("hotelName");
 System.out.println(hotelSelected);
@@ -836,10 +831,13 @@ public static String toScriptArray(String[] arr){
   
   
   </script>
-  
+   <script>
+  $(document).on('click', '.next', function() {
+	    $("#Payment_info").removeClass("hidden");;
+	});
+  </script>
 </head>
 <body>
-<label id = "search">Query</label>
 <form class="jumbotron" id = "reserve" method="query" action="VerifyReservation.jsp">
     <h4>Room Reservation Details:<Small> Reserve up to 3 Rooms</small> </h4>
     

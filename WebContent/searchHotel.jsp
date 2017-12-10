@@ -124,10 +124,36 @@
 	  
   }
   </script>
+  
+  <script>
+  
+  function informMe(message){
+	  alert(message);
+  }
+  
+  </script>
 </head>
 
 <body>
 
+<%
+
+try{
+	
+	String message =  (String)session.getAttribute("Reservation_STATUS");
+	
+	if(message!=null && message.length() > 0){
+		%><script>
+			informMe(<%= message%>)
+		</script>
+		<%
+	}
+	
+}catch(Exception e){
+	//no error
+}
+
+%>
 
 <form class="jumbotron" method = "searchedHotel" action = "reserve.jsp">
     <div>

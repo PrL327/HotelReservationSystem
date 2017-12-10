@@ -11,7 +11,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-Hello
 
 <%
 boolean failed = false;
@@ -23,24 +22,30 @@ String name_on_card = request.getParameter("name_on_card");
 String exp_date = request.getParameter("exp_date");
 String billing_addr = request.getParameter("billing_addr");
 
-String todaysDate = Today.getToday();
-
-String[] todayArr = todaysDate.split("/");
-int todaysValue = Integer.valueOf(todayArr[2])*365 + Integer.valueOf(todayArr[0]);
-int expValue = 0;
-String[] expArr = exp_date.split("/");
-if(expArr.length > 1){
-	expValue = Integer.valueOf(expArr[0])*365 + Integer.valueOf(expArr[1]);
-}else{
-	String[] other = exp_date.split("-");
-	expValue = Integer.valueOf(other[0])*365 + Integer.valueOf(other[1]);
-}
-
-if(expValue < todaysValue){
-	message = "Card has expired";
+if(card_type == null || card_num ==null || cvc_num == null || name_on_card == null || exp_date == null || billing_addr == null){
 	failed = true;
+	message = "Invalid payment information";
 }
 
+if(!failed){
+	String todaysDate = Today.getToday();
+	
+	String[] todayArr = todaysDate.split("/");
+	int todaysValue = Integer.valueOf(todayArr[2])*365 + Integer.valueOf(todayArr[0]);
+	int expValue = 0;
+	String[] expArr = exp_date.split("/");
+	if(expArr.length > 1){
+		expValue = Integer.valueOf(expArr[0])*365 + Integer.valueOf(expArr[1]);
+	}else{
+		String[] other = exp_date.split("-");
+		expValue = Integer.valueOf(other[0])*365 + Integer.valueOf(other[1]);
+	}
+	
+	if(expValue < todaysValue){
+		message = "Card has expired";
+		failed = true;
+	}
+}
 
 int numOfRooms = Integer.valueOf(request.getParameter("numOfRoomsReserved"));
 
@@ -75,7 +80,7 @@ if(!failed){
 				failed = true;
 				continue;
 			}
-			System.out.println("Error after line 59");
+			
 			int j = 1;//second variable for item
 			
 			
@@ -117,21 +122,90 @@ if(!failed){
 		System.out.println("There was some error getting details of the rooms");
 	}
 }
+
 int customerID = Integer.valueOf((String)session.getAttribute("userID"));
 int hotelID = Integer.valueOf(request.getParameter("hotelID"));
 
+Connection con = null;
+
+try{
+	String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
+	Class.forName("com.mysql.jdbc.Driver");
+	con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+}catch(Exception e ){
+	System.out.println("Unable to connect to the database");
+	failed = true;
+}
+
+
+
+
+//check if the room is current reserved or not
+
+try{
+	
+	String datesGen = "SELECT * FROM Room_Reserves r WHERE r.Room_no = ? and r.HotelID = ?";
+	PreparedStatement reservedRooms = con.prepareStatement(datesGen);
+	
+	
+	int curr = 0;
+	while(curr< rooms.size()){
+		RoomDetails currRoom = rooms.get(curr);
+		int currRoomNo = currRoom.roomNum;
+		String checkOut = currRoom.checkOutDate;
+		String checkIn = currRoom.checkInDate;
+		
+		reservedRooms.setInt(1, currRoomNo);
+		reservedRooms.setInt(2, hotelID);
+		
+		try{
+			ResultSet currResult = reservedRooms.executeQuery();
+			
+			currResult.next();
+			String tableOut = currResult.getString("r.OutDate");
+			String tableIn = currResult.getString("r.InDate");
+			
+			if(checkIn.compareTo(tableIn)>=0 && checkIn.compareTo(tableOut)<0){
+				//room is already booked
+				message = "Room: "+currRoomNo+" is currently booked during those days";
+				failed = true;
+				break;
+			}
+			
+			if(checkOut.compareTo(tableIn)>0 && checkOut.compareTo(tableOut)<=0){
+				//room is already booked
+				message = "Room: "+currRoomNo+" is currently booked during those days";
+				failed = true;
+				break;
+			}
+			
+		}catch(Exception e){
+			curr++;
+			continue;
+		}
+		
+		
+		
+		curr++;
+	}
+}catch(Exception e){
+	System.out.println("Some error");
+}
+
+
 if(failed){
 	//there was some error with the days and stuff
+	if(con!=null){
+		con.close();
+	}
 	session.setAttribute("Reservation_STATUS", message);
 	System.out.println(message);
-	String redirectPage = "reserve.jsp";
+	String redirectPage = "searchHotel.jsp";
 	response.sendRedirect(redirectPage);
 }else{
 
 	try{
-		String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.com/HotelReservation";
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
+		
 		
 		String createInvoice = "SELECT * FROM Reservation_Made rm WHERE rm.InvoiceNo = ?";
 		PreparedStatement findInvoice = con.prepareStatement(createInvoice);
@@ -279,7 +353,7 @@ if(failed){
 		String redirectPage = "user_dashboard.jsp";
 		response.sendRedirect(redirectPage);
 	}catch(Exception e){
-		String redirectPage = "reserve.jsp";
+		String redirectPage = "searchHotel.jsp";
 		response.sendRedirect(redirectPage);
 	}
 }
