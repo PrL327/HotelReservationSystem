@@ -50,7 +50,7 @@ public List<String> getRoomTypes(String room_Invoice){
 	while(room.next()){
 		String temp = room.getString("Reservation_Made.roomReserved");
 		roomNames.add(temp);
-		String hotel_id = room.getString("Reservation_Includes.HotelID");
+		String hotel_id = room.getString("Reservation_Made.HotelID");
 	}
 	con.close();
 	return roomNames;
@@ -63,13 +63,13 @@ public List<String> getRoomTypes(String room_Invoice){
 %>
 
 
-  <form class="jumbotron" method = "selectedHotel" action = "user_dashboard.jsp">
+  <form class="jumbotron" method = "selectedHotel" action = "store_room_review.jsp">
     <div>
       <h2>Write a Review</h2>
     </div>
     <div class="form-group col-2 ">
       <label for="Hotel_Selection">Room</label>
-      <select class="form-control" id="bType_review" name="bTypes">
+      <select class="form-control" id="rType_review" name="rTypes">
         <option selected="selected">Select Type</option>
         <%
         List<String> roomNames = getRoomTypes(room_Invoice);
@@ -84,7 +84,7 @@ public List<String> getRoomTypes(String room_Invoice){
 	<div style="width: 400px;">
 </div>
 <div style="padding-bottom: 18px;">Rate this Room<br/>
-	<select id="data_3" name="data_3" style="width : 150px;" class="form-control">
+	<select id="data_3" name="r_rating" style="width : 150px;" class="form-control">
 		<option value = "10">10</option>
 		<option value = "9">9</option>
 		<option value = "8">8</option>
@@ -99,7 +99,7 @@ public List<String> getRoomTypes(String room_Invoice){
 </div>
 
 <div style="padding-bottom: 18px;">Text Comment<span style="color: red;"> *</span><br/>
-	<textarea id="data_8"  name="data_8" style="width : 450px;" rows="10" class="form-control"></textarea>
+	<textarea id="data_8"  name="r_comment" style="width : 450px;" rows="10" class="form-control"></textarea>
 </div>
 <%-- <input class ="hidden" value = <%hotel_id;%>> --%>
 <%out.print("<input name=\"review_hotelID\" class='hidden' value =\""+hotel_id+"\">"); %>

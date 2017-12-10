@@ -15,18 +15,18 @@ String url = "jdbc:mysql://cs336-hoteldbms.cwop6c6w5v0u.us-east-2.rds.amazonaws.
 Class.forName("com.mysql.jdbc.Driver");
 Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");
 
-String room_type = request.getParameter("reviewed_rtype");
-int rating = Integer.valueOf(request.getParameter("rtype_rating"));
+String room_type = request.getParameter("rTypes");
+int rating = Integer.valueOf(request.getParameter("r_rating"));
 int hotel_id = Integer.valueOf(request.getParameter("review_hotelID"));
 
-String review_comment = request.getParameter("rtype_text");
+String review_comment = request.getParameter("r_comment");
 int review_id = Integer.MIN_VALUE;
 review_id = (int)(Math.random() * 99999999+10000000);
 int customer_id = Integer.valueOf((String)session.getAttribute("userID"));
 String current_date = Today.getToday();
 
 
-String new_review = "INSERT INTO Review values(?, ?, 0, 1, 0, ?, ?, ?)";
+String new_review = "INSERT INTO Review values(?, ?, 1, 0, 0, ?, ?, ?)";
 PreparedStatement ps = con.prepareStatement(new_review);
 ps.setInt(1, review_id);
 ps.setInt(2, rating);
