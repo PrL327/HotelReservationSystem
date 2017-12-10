@@ -28,6 +28,7 @@
 <body>
 <%
 String bType_Invoice = request.getParameter("invoice_no_for_breakfast");
+String hotel_id = request.getParameter("b_hotelID");
 
 %>
 
@@ -41,13 +42,14 @@ public List<String> getBreakfastTypes(String bType_Invoice){
 	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
 	
 	Statement getBTypes = con.createStatement();
-	String bTypesString = "SELECT Reservation_Includes.bType FROM Reservation_Includes WHERE Reservation_Includes.InvoiceNo = "+bType_Invoice;
+	String bTypesString = "SELECT Reservation_Includes.bType, Reservation_Includes.HotelID FROM Reservation_Includes WHERE Reservation_Includes.InvoiceNo = "+bType_Invoice;
     ResultSet bType = getBTypes.executeQuery(bTypesString);
    
 	List<String> bTypeNames = new ArrayList<String>();
 	while(bType.next()){
 		String temp = bType.getString("Reservation_Includes.bType");
 		bTypeNames.add(temp);
+		String hotel_id = bType.getString("Reservation_Includes.HotelID");
 	}
 	con.close();
 	return bTypeNames;
@@ -60,13 +62,13 @@ public List<String> getBreakfastTypes(String bType_Invoice){
 %>
 
 
-  <form class="jumbotron" method = "selectedHotel" action = "user_dashboard.jsp">
+<form class="jumbotron" method = "selectedHotel" action = "store_breakfast_review.jsp">
     <div>
       <h2>Write a Review</h2>
     </div>
     <div class="form-group col-2 ">
       <label for="Hotel_Selection">Breakfast Type</label>
-      <select class="form-control" id="bType_review" name="bTypes">
+      <select class="form-control" name="reviewed_btype" id="bType_review" name="bTypes">
         <option selected="selected">Select Type</option>
         <%
         List<String> bTypeNames = getBreakfastTypes(bType_Invoice);
@@ -81,23 +83,24 @@ public List<String> getBreakfastTypes(String bType_Invoice){
 	<div style="width: 400px;">
 </div>
 <div style="padding-bottom: 18px;">Rate this Breakfast<br/>
-<select id="data_3" name="data_3" style="width : 150px;" class="form-control">
-<option>10</option>
-<option>9</option>
-<option>8</option>
-<option>7</option>
-<option>6</option>
-<option>5</option>
-<option>4</option>
-<option>3</option>
-<option>2</option>
-<option>1</option>
+<select id="data_3" name="btype_rating" style="width : 150px;" class="form-control">
+<option value="10">10</option>
+<option value="9">9</option>
+<option value="8">8</option>
+<option value="7">7</option>
+<option value="6">6</option>
+<option value="5">5</option>
+<option value="4">4</option>
+<option value="3">3</option>
+<option value="2">2</option>
+<option value="1">1</option>
 </select>
 </div>
 <div style="padding-bottom: 18px;">Text Comment<span style="color: red;"> *</span><br/>
-<textarea id="data_8" ${readonly} name="data_8" style="width : 450px;" rows="10" class="form-control"></textarea>
+<textarea id="data_8" name="btype_text" style="width : 450px;" rows="10" class="form-control"></textarea>
 </div>
-
+<%-- <input class ="hidden" value = <%hotel_id;%>> --%>
+<%out.print("<input name=\"review_hotelID\" class='hidden' value =\""+hotel_id+"\">"); %>
 <input class = "btn btn-success" type="submit" value="submit">
 </form>
    
