@@ -63,13 +63,13 @@ public List<String> getServiceTypes(String sType_Invoice){
 %>
 
 
-  <form class="jumbotron" method = "selectedHotel" action = "user_dashboard.jsp">
+  <form class="jumbotron" method = "selectedHotel" action = "store_service_review.jsp">
     <div>
       <h2>Write a Review</h2>
     </div>
     <div class="form-group col-2 ">
       <label for="Hotel_Selection">Service Type</label>
-      <select class="form-control" id="bType_review" name="bTypes">
+      <select class="form-control" id="sType_review" name="sType">
         <option selected="selected">Select Type</option>
         <%
         List<String> sTypeNames = getServiceTypes(sType_Invoice);
@@ -84,7 +84,7 @@ public List<String> getServiceTypes(String sType_Invoice){
 	<div style="width: 400px;">
 </div>
 <div style="padding-bottom: 18px;">Rate this Service<br/>
-<select id="data_3" name="data_3" style="width : 150px;" class="form-control">
+<select id="data_3" name="s_rating" style="width : 150px;" class="form-control">
 <option value = "10">10</option>
 <option value = "9">9</option>
 <option value = "8">8</option>
@@ -98,7 +98,7 @@ public List<String> getServiceTypes(String sType_Invoice){
 </select>
 </div>
 <div style="padding-bottom: 18px;">Text Comment<span style="color: red;"> *</span><br/>
-<textarea id="data_8" 	name="data_8" style="width : 450px;" rows="10" class="form-control"></textarea>
+<textarea id="data_8" 	name="s_comment" style="width : 450px;" rows="10" class="form-control"></textarea>
 </div>
 <%-- <input class ="hidden" value = <%hotel_id;%>> --%>
 <%out.print("<input name=\"review_hotelID\" class='hidden' value =\""+hotel_id+"\">"); %>

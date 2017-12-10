@@ -56,7 +56,7 @@
 	out.print("<input class='hidden' name=\"invoice_no_for_breakfast\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Breakfast'>");
 	out.print("</form>");
-	out.print("<form action='review_stype.jsp'>");
+	out.print("<form action='review_stypes.jsp'>");
 	out.print("<input class='hidden' name=\"s_hotelID\" value=\""+gen_info.getString("rm.HotelID")+"\">");
 	out.print("<input class='hidden' name=\"invoice_no_for_service\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Service'>");

@@ -27,16 +27,19 @@
 	Class.forName("com.mysql.jdbc.Driver");
 	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
 	
-	String getIDStatement = "SELECT c.first_name, t2.total FROM (SELECT * FROM (SELECT r.CID as customer , sum(r.totalAmt) as total" 
-			+ "FROM `HotelReservation`.`Reservation_Made` AS r WHERE r.ResDate BETWEEN ? and ? ORDER BY t1.total DESC) t2,  `HotelReservation`.`Customer` AS cWHERE c.ID = t2.customer;";
+	String getIDStatement = "SELECT c.first_name, t3.total FROM (SELECT * FROM (SELECT * FROM (SELECT r.CID as customer , sum(r.totalAmt) as total FROM `HotelReservation`.`Reservation_Made` AS r WHERE r.ResDate BETWEEN ? and ? GROUP BY r.CID) AS t1 ORDER BY t1.total DESC) t2 LIMIT 5) t3, `HotelReservation`.`Customer` AS c WHERE c.ID = t3.customer";
+	
 			
 	PreparedStatement ps = con.prepareStatement(getIDStatement);
 	ps.setString(1, StartDateNewFormat);
 	ps.setString(2, EndDateNewFormat);
 	
-	ResultSet topCustomers = ps.executeQuery();
 
 %>
+<table>
+<tr>
+</tr>
+</table>
 
 </body>
 </html>
