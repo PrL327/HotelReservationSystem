@@ -55,6 +55,7 @@
 		out.println("The world greatest service is " + stype);
 	}
 	
+	con.close();
 	
 	
 	
