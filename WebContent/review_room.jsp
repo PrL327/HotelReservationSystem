@@ -43,14 +43,14 @@ public List<String> getRoomTypes(String room_Invoice){
 	Connection con = DriverManager.getConnection(url, "HotelDBMS", "password");	
 	
 	Statement getRoom = con.createStatement();
-	String roomString = "SELECT Reservation_Made.roomReserved, Reservation_Made.HotelID FROM Reservation_Made WHERE Reservation_Made.InvoiceNo = "+room_Invoice;
+	String roomString = "SELECT Room_Reserves.Room_no, Room_Reserves.HotelID FROM Room_Reserves WHERE Room_Reserves.InvoiceNo = "+room_Invoice;
     ResultSet room = getRoom.executeQuery(roomString);
    
 	List<String> roomNames = new ArrayList<String>();
 	while(room.next()){
-		String temp = room.getString("Reservation_Made.roomReserved");
+		String temp = room.getString("Room_Reserves.Room_no");
 		roomNames.add(temp);
-		String hotel_id = room.getString("Reservation_Made.HotelID");
+		String hotel_id = room.getString("Room_Reserves.HotelID");
 	}
 	con.close();
 	return roomNames;
