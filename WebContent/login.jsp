@@ -50,6 +50,7 @@
         %>
       <div class="col-lg-4">
         <div class="jumbotron loginPane">
+        	  <a href="HelloWorld.jsp">Go Home</a>
           <h4> Log in: </h4>
           <form method = "log_in" action = "verify-login.jsp">
             <div class="form-group">
