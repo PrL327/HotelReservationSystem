@@ -7,9 +7,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Our Five Best Customers</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 </head>
 <body>
-Our Best Customers from this time period are:
+<p>Our Best Customers from this time period are:<p>
+<table class='table'>
+<tr><td>Name</td><td>Amount</td></tr>
 <%
 
 	String Startdate_rcv = request.getParameter("Best_Customer_StartDate");
@@ -35,18 +38,23 @@ Our Best Customers from this time period are:
 	ps.executeQuery();
 	ResultSet best_customers = ps.executeQuery();
 	
-	
+	try {
 	while(best_customers.next()){
+		out.print("<tr>");
+		out.print("<td>");
 		out.print(best_customers.getString("c.first_name"));
-		out.print(" ");
+		out.print("</td>");
+		out.print("<td>");
 		out.print(best_customers.getString("t3.total"));	
+		out.print("</td>");
+		out.print("</tr>");
+	}
+	}catch(Exception e){
+		out.print("error processing query");
 	}
 	
 
 %>
-<table>
-<tr>
-</tr>
 </table>
 
 </body>

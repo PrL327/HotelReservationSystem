@@ -9,6 +9,7 @@
 <title>Hotel Stats</title>
 </head>
 <body>
+<h2>Hotel Stats</h2>
 <form action="room_query.jsp">
 	<p> Find the Best Room Type for Each Hotel </p>
 	<label>Start Date: </label><input name="Best_Room_StartDate" type="Date">
@@ -16,7 +17,7 @@
 	<input type="submit" value="Submit">
 </form>
 <form action ="customer_query.jsp">
-	<p> Up to our Five Best Customers </p>
+	<p> Our Best Customers </p>
 	<label>Start Date: </label><input name="Best_Customer_StartDate" type="Date">
 	<label>End Date: </label><input name="Best_Customer_EndDate" type="Date">
 	<input type="submit" value="Submit">

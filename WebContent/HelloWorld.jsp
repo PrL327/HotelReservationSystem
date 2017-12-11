@@ -36,15 +36,15 @@
               <h3 class="masthead-brand">Welcome</h3>
               <nav class="nav nav-masthead">
                 <a class="nav-link active" href="#">Home</a>
-                <a class="nav-link" href="#">Create an Account</a>
-                <a class="nav-link" href="#">Stats</a>
-                <a class="nav-link" href="login.jsp">Log In</a>
+                <a style="color:white;" class="nav-link" href="account_register.jsp">Create an Account</a>
+                <a style="color:white;" class="nav-link" href="hotel_stats.jsp">Stats</a>
+                <a style="color:white;" class="nav-link" href="login.jsp">Log In</a>
               </nav>
             </div>
           </header>
           <main role="main" class="inner cover">
             <h1 class="cover-heading">Travel. And Stay with the Best</h1>
-            <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+            <p class="lead">We hope you enjoy your stay</p>
             <p class="lead">
               <a href="login.jsp" class="btn btn-lg btn-primary">Reserve Now</a>
             </p>
