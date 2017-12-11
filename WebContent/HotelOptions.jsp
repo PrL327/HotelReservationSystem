@@ -838,10 +838,13 @@ public static String toScriptArray(String[] arr){
   </script>
 </head>
 <body>
+<form class='form-control' method="getHotelRooms" action="hotel_rooms.jsp">
+	 	<input class = "hidden" name="hotel_rooms" value="<%
+	 	out.print(Integer.toString(hotelID));%>">
+	    <input class ="btn btn-link" value="View Rooms Offered By This Hotel" type=submit>
+</form>
 <form class="jumbotron" id = "reserve" method="query" action="VerifyReservation.jsp">
     <h4>Room Reservation Details:<Small> Reserve up to 3 Rooms</small> </h4>
-    
-    <a href="">View Hotel Rooms</a>
     <div id="RoomReservation_" style="margin-bottom:2vh; margin-top:1vh;">
       <div id= "Room_1" class="Room_1">
         <fieldset class="appear">
@@ -1038,7 +1041,7 @@ public static String toScriptArray(String[] arr){
   <input id = "form-line">
   
 	</div>
-  </form>
+</form>
   
 </body>
 </html>
