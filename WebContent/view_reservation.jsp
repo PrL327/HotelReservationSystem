@@ -25,9 +25,7 @@
 </head>
 <body>
 <%
-
 	  
-
 %>
 <div class="container">
 <%
@@ -37,13 +35,16 @@
 	Statement stmt = con.createStatement();
 	Statement stmt_2 = con.createStatement();
 	Statement stmt_3 = con.createStatement();
+	Statement stmt_4 = con.createStatement();
+	Statement stmt_5 = con.createStatement();
+	
 	String invoice_no = request.getParameter("invoice");
-
 	String str = "SELECT * FROM Reservation_Made rm, Room_Reserves rr WHERE rm.invoiceNo = rr.InvoiceNo AND rm.invoiceNo ="+invoice_no;
 	String str2 = "SELECT * FROM Reservation_Contains rc WHERE rc.invoiceNo ="+invoice_no;
 	String str_breakfast = "SELECT * FROM Reservation_Includes ri WHERE ri.invoiceNo = "+invoice_no;
 	
 	ResultSet gen_info = stmt.executeQuery(str);
+	ResultSet reservation_info = stmt_5.executeQuery(str);
 	ResultSet brkservice = stmt_2.executeQuery(str2);
 	ResultSet breakfast_include = stmt_3.executeQuery(str_breakfast);
 	
@@ -51,82 +52,87 @@
 	out.print("<h2 style='margin-top:5vh;'>Invoice: "+gen_info.getString("rm.invoiceNo")+"</h2>");
 	out.print("<h5>Total Cost: $"+gen_info.getString("rm.TotalAmt")+"</h5>");
 	out.print("<div class='row'>");
-	out.print("<form action='review_btypes.jsp'>");
+	out.print("<form class='col' action='review_btypes.jsp'>");
 	out.print("<input class='hidden' name=\"b_hotelID\" value=\""+gen_info.getString("rm.HotelID")+"\">");
 	out.print("<input class='hidden' name=\"invoice_no_for_breakfast\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Breakfast'>");
 	out.print("</form>");
-	out.print("<form action='review_stypes.jsp'>");
+	out.print("<form class='col' action='review_stypes.jsp'>");
 	out.print("<input class='hidden' name=\"s_hotelID\" value=\""+gen_info.getString("rm.HotelID")+"\">");
 	out.print("<input class='hidden' name=\"invoice_no_for_service\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Service'>");
 	out.print("</form>");
-	out.print("<form action='review_room.jsp'>");
+	out.print("<form class='col'action='review_room.jsp'>");
 	out.print("<input class='hidden' name=\"r_hotelID\" value=\""+gen_info.getString("rm.HotelID")+"\">");
 	out.print("<input class='hidden' name=\"invoice_no_for_room\" value=\""+gen_info.getString("rm.InvoiceNo")+"\">");
 	out.print("<input class='btn btn-primary' type='submit' value='Review Room'>");
 	out.print("</form>");
 	out.print("</div>");
+	out.print("<h5 style='margin-top:5vh;'>Room Details<h5>");
+	out.print("<table class='Table'>");
 	
-
+	reservation_info.next();
   do
   {
-	out.print("<h5 style='margin-top:5vh;'>Room Reservation Details<h5>");
-	out.print("<table class='Table'>");
 	out.print("<tr>");
 	out.print("<td>");
-	out.print("Room: "+gen_info.getString("rr.room_no"));
+	out.print("Room: "+reservation_info.getString("rr.room_no"));
 	out.print("</td>");
 	out.print("<td>");
-	out.print("Staying From/To: "+gen_info.getString("rr.InDate")+" - "+gen_info.getString("rr.OutDate"));
+	out.print("Staying From/To: "+reservation_info.getString("rr.InDate")+" - "+reservation_info.getString("rr.OutDate"));
+	out.print("</td>");
+	out.print("</td>");
+	out.print("<td>");
+	out.print("Number of Days: "+reservation_info.getString("rr.NoOfDays"));
 	out.print("</td>");
 	out.print("</tr>");
-	out.print("<tr>");
-	out.print("<td>");
-	out.print("Breakfast(s) Ordered: ");
+	
+  } while(reservation_info.next());
 
-	try {
-		    
-			
-			
-			while(breakfast_include.next()) {
-				String breakfast = breakfast_include.getString("ri.bType");
-				System.out.print("BREAKFAST: "+breakfast);
-				out.print(breakfast_include.getString("ri.bType")+", ");
-			
-			}
-			out.print("</td>");
-	
+  out.print("</table>");
+  out.print("<h5 style='margin-top:5vh;'>Breakfast and Services Included:<h5>");
+  out.print("<table class= 'table'>");
+  out.print("<tr>");
+  try {
+	    
+		out.print("<td>");
+		out.print("Breakfasts Ordered: ");
 		
-	}
-	catch(Exception e) {
-		out.print("none");
-		out.print("</td>");
+		while(breakfast_include.next()) {
+			String breakfast = breakfast_include.getString("ri.bType");
+			System.out.print("BREAKFAST: "+breakfast);
+			out.print(breakfast_include.getString("ri.bType")+", ");
 		
-		
-	}
-	out.print("<td>");
-	out.print("Service(s) Requested: ");
-	try {
-		while(brkservice.next()){
-		out.print(brkservice.getString("rc.sType")+", ");
 		}
-		
-	}catch(Exception e){
-		
-		out.print("none");
-		
-		
-	}
-	out.print("</td>");
-	out.print("</tr>");
-	out.print("</table>");
+		out.print("</td>");
+
 	
-  } while(gen_info.next());
-  
+}
+catch(Exception e) {
+	out.print("none");
+	out.print("</td>");
+	
+	
+}
+out.print("<td>");
+out.print("Service(s) Requested: ");
+try {
+	while(brkservice.next()){
+	out.print(brkservice.getString("rc.sType")+", ");
+	}
+	
+	out.print("</td>");
+}catch(Exception e){
+	
+	out.print("none");
+	
+	
+	
+}
+out.print("</tr>");
+out.print("</table>");
   
  
 %>
 </div>
 </body>
-</html>
