@@ -53,7 +53,7 @@
 		out.print("error processing query");
 	}
 	
-
+con.close();
 %>
 </table>
 

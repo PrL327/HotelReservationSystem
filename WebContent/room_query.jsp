@@ -82,7 +82,7 @@ while(hotelIDs.next()){
 	
 }
 
-
+con.close();
 %>
 </body>
 </html>

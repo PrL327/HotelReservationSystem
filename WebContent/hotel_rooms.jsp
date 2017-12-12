@@ -60,6 +60,7 @@ function goBack() {
 		out.print("<tr>");
 		
 	}
+	con.close();
 %>
 </table>
 <button class='btn btn-primary' onclick="goBack()">Go Back</button>

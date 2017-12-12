@@ -42,7 +42,7 @@ ps_2.setString(2, breakfast_type);
 ps_2.setInt(3, hotel_id);
 ps_2.executeUpdate();
 
-
+con.close();
 String redirectPage = "user_dashboard.jsp";
 response.sendRedirect(redirectPage);
 
