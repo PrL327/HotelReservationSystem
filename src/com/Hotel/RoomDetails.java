@@ -45,7 +45,6 @@ public class RoomDetails {
 		int todayValue = Integer.valueOf(today[1]) + getMonthValue(today[0]) + (Integer.valueOf(today[2])*365);
 		int checkOutValue = 0;
 		int checkInValue = 0;
-		System.out.println("Today's value: "+ todayValue);
 		int days = 0;
 		
 		List<String> checkoutdate = new ArrayList<String>();
@@ -214,9 +213,8 @@ public class RoomDetails {
 		
 		}
 		
-		while(monthvalue<1){
-			firstDayOfMonth += daysInMonth(monthvalue);
-			monthvalue--;
+		while(monthvalue>1){
+			firstDayOfMonth += daysInMonth(--monthvalue);
 		}
 		
 		
