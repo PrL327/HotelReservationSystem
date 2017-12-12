@@ -140,16 +140,18 @@ try{
 	  out.print("</div>");
 	  
 	  out.print("<div class='row'>");
-	  out.print("<form action='review_btypes.jsp'>");
-		out.print("<input class='hidden' name='invoice_no' type='submit' value=\""+result.getString("HotelID")+"\">");
+	  out.print("<form action='viewBreakfastReviews.jsp'>");
+		out.print("<input class='hidden' name='HotelID'  value=\""+result.getString("HotelID")+"\">");
 		out.print("<input class='btn btn-link' type='submit' value='View Breakfast Reviews'>");
 		out.print("</form>");
-		out.print("<form action='review.jsp'>");
-		out.print("<input class='hidden' name='invoice_no' type='submit' value=\""+result.getString("HotelID")+"\">");
+		
+		out.print("<form action='viewServiceReviews.jsp'>");
+		out.print("<input class='hidden' name='HotelID'  value=\""+result.getString("HotelID")+"\">");
 		out.print("<input class='btn btn-link' type='submit' value='View Service Reviews'>");
 		out.print("</form>");
-		out.print("<form action='review.jsp'>");
-		out.print("<input class='hidden' name='invoice_no' type='submit' value=\""+result.getString("HotelID")+"\">");
+		
+		out.print("<form action='viewRoomReviews.jsp'>");
+		out.print("<input class='hidden' name='HotelID'  value=\""+result.getString("HotelID")+"\">");
 		out.print("<input class='btn btn-link' type='submit' value='View Room Reviews'>");
 		out.print("</form>");
 	  out.print("</div>");
