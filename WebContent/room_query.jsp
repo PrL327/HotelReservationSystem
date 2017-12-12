@@ -53,15 +53,14 @@ while(hotelIDs.next()){
 	try{
 		ResultSet result = topRoom.executeQuery();
 		result.next();
-		System.out.println("Here");
+		
 		int roomNo = result.getInt("topRoom");
-		System.out.println("Line 56");
+		
 		String roomTypeStatement = "SELECT r.RoomType typeOfRoom FROM Room r WHERE r.HotelID = ? AND r.room_no = ?";
 		PreparedStatement getRoomType = con.prepareStatement(roomTypeStatement);
 		getRoomType.setInt(1, currHotelID);
 		getRoomType.setInt(2, roomNo);
-		System.out.println("Current hotel "+currHotelID);
-		System.out.println("Current roomNO "+ roomNo);
+
 		ResultSet result2 = getRoomType.executeQuery();
 		if(result2.next()){
 			String hotelNameStmt = "SELECT h.name hName FROM Hotel h WHERE h.HotelID = ?";
