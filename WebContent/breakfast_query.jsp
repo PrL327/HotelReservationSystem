@@ -42,6 +42,8 @@
 	
 	
 	out.println("The world greatest breakfast is " + btype);
+	
+	con.close();
 %>
 
 
